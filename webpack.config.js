@@ -12,7 +12,7 @@ module.exports = {
         // save code -> gets injected into page without refresh
         'webpack/hot/dev-server',
         // current app
-        './app/index.js'
+        './app/game.js'
     ],
     // where to dump bundled file
     output: {

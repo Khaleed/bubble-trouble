@@ -4,7 +4,7 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
     // app entry point
-    entry: path.resolve(__dirname, 'app', 'index.js'),
+    entry: path.resolve(__dirname, 'app', 'game.js'),
 
     output: {
         path: __dirname,
