@@ -1,0 +1,21 @@
+body, canvas {
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+#screen {
+    background-color: black;
+    margin: auto;
+    display: block;
+}
+
+#inst, #status {
+    padding-top: 20px;
+    font-size: 20 px;
+    text-align: center;
+}
+
+#player, #bubble {
+    display: none;
+}
