@@ -1,10 +1,10 @@
 {
-  "name": "es6-boilerplate",
+  "name": "bubble-struggle",
   "version": "1.0.0",
   "description": "",
   "main": "devserver.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "watch": "node devserver.js",
     "deploy": "NODE_ENV=production webpack -p --config webpack.production.config.js"
   },
@@ -23,7 +23,7 @@
     "project",
     "webpack"
   ],
-  "author": "Khalid Omar Ali",
+  "author": "Khalid",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Khaleed/es6-project-boilerplate/issues"
@@ -31,11 +31,11 @@
   "homepage": "https://github.com/Khaleed/es6-project-boilerplate#readme",
   "dependencies": {
     "babel-core": "^6.9.1",
+    "babel-jest": "^16.0.0",
     "babel-loader": "^6.2.4",
     "babel-plugin-transform-runtime": "^6.9.0",
-    "babel-polyfill": "^6.9.1",
+    "babel-polyfill": "^6.16.0",
     "babel-preset-es2015": "^6.9.0",
-    "babel-preset-stage-0": "^6.5.0",
     "babel-runtime": "^6.9.2",
     "css-loader": "^0.23.1",
     "eslint": "^3.8.1",
@@ -44,6 +44,8 @@
     "eslint-plugin-fp": "^2.2.0",
     "eslint-plugin-import": "^1.14.0",
     "extract-text-webpack-plugin": "^1.0.1",
+    "jest": "^16.0.2",
+    "jest-cli": "^16.0.2",
     "json-loader": "^0.5.4",
     "node-sass": "^3.10.1",
     "sass-loader": "^3.2.0",
@@ -52,5 +54,8 @@
   },
   "devDependencies": {
     "babel-preset-stage-0": "^6.16.0"
-  }
+  },
+    "jest": {
+        "testEnvironment": "node"
+    }
 }
