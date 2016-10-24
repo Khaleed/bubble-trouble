@@ -1,7 +1,6 @@
 envs
 node_modules/
 build/Release
-public/
 .npm
 .node_repl_history
 *.xls
