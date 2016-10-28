@@ -3,7 +3,8 @@
 import assets from "./assets";
 
 (function () {
-    let canvas = assets.canvas;
+    const canvas = assets.canvas;
+
     window.addEventListener("load", () => {
         const screen = canvas.getContext("2d");
         canvas.width = 1200;
