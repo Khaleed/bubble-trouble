@@ -11,25 +11,25 @@ import { List, Map } from "immutable";
         canvas.width = 1200;
         canvas.height = 800;
 
-        const initialGameState = {
+        const initialGameState = Map({
             x: canvas.width/2,
             y: canvas.height/2,
             vx: 300,
             vy: 80,
             color: "red",
             radius: 25
-        };
+        });
 
         const update = oldState => {
             const dt = 0.02;
             const newX = oldState.x + (dt * oldState.vx);
             const newY = oldState.y + (dt * oldState.vy);
-            const doReflescreen = newX < oldState.radius || newX > canvas.width - oldState.radius;
+            const doReflectX = newX < oldState.radius || newX > canvas.width - oldState.radius;
             const doReflectY = newY <  oldState.radius || newY > canvas.height - oldState.radius;
             const newState = {
                 x: newX,
                 y: newY,
-                vx: doReflescreen ? (oldState.vx * -1) : oldState.vx,
+                vx: doReflectX ? (oldState.vx * -1) : oldState.vx,
                 vy: doReflectY ? (oldState.vy * -1) : oldState.vy,
                 color: oldState.color,
                 radius: oldState.radius
