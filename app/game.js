@@ -1,6 +1,7 @@
 "use strict";
 
 import assets from "./assets";
+import { List, Map } from "immutable";
 
 (function () {
     const canvas = assets.canvas;
