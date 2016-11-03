@@ -26,14 +26,12 @@ import { List, Map } from "immutable";
             const newY = oldState.y + (dt * oldState.vy);
             const doReflectX = newX < oldState.radius || newX > canvas.width - oldState.radius;
             const doReflectY = newY <  oldState.radius || newY > canvas.height - oldState.radius;
-            const newState = {
+            const newState = initialGameState.merge(Map({
                 x: newX,
                 y: newY,
                 vx: doReflectX ? (oldState.vx * -1) : oldState.vx,
-                vy: doReflectY ? (oldState.vy * -1) : oldState.vy,
-                color: oldState.color,
-                radius: oldState.radius
-            };
+                vy: doReflectY ? (oldState.vy * -1) : oldState.vy
+            }));
             return newState;
         };
         // impure rendering fn that populates canvas
