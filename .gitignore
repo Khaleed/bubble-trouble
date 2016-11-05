@@ -24,3 +24,4 @@ tramp
 /eshell/lastdir
 .tern-port
 yarn.lock
+yarn-error.log
