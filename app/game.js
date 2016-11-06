@@ -1,4 +1,4 @@
-"use strict";
+/*eslint fp/no-unused-expression: 0, fp/no-nil: 0 */
 
 import assets from "./assets";
 import { List, Map } from "immutable";
@@ -39,7 +39,7 @@ import { List, Map } from "immutable";
             screen.clearRect(0, 0, canvas.width, canvas.height);
             screen.beginPath();
             screen.arc(gameState.x, gameState.y, gameState.radius, 0, Math.PI*2, false);
-            screen.fillStyle = gameState.color;
+            screen.fillStyle = gameState.color; // eslint-disable-line fp/no-mutation
             screen.fill();
             screen.closePath();
         };
