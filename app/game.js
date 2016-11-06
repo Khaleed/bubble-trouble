@@ -8,8 +8,6 @@ import { List, Map } from "immutable";
 
     window.addEventListener("load", () => {
         const screen = canvas.getContext("2d");
-        canvas.width = 1200;
-        canvas.height = 800;
 
         const initialGameState = Map({
             x: canvas.width/2,
