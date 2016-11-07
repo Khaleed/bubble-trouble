@@ -29,7 +29,6 @@ import { List, Map } from "immutable";
                 vx: doReflectX ? (oldState.get("vx") * -1) : oldState.get("vx"),
                 vy: doReflectY ? (oldState.get("vy") * -1) : oldState.get("vy")
             }));
-            console.log("new state color is: ", newState.get("radius"));
             return newState;
         };
 
