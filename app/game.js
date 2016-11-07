@@ -17,7 +17,7 @@ import { List, Map } from "immutable";
             radius: 25
         });
 
-        const update = oldState => {
+        function update(oldState) {
             const dt = 0.02;
             const newX = oldState.get("x") + (dt * oldState.get("vx"));
             const newY = oldState.get("y") + (dt * oldState.get("vy"));
@@ -33,7 +33,7 @@ import { List, Map } from "immutable";
         };
 
         // impure rendering fn that populates canvas
-        const draw = gameState => {
+        function draw(gameState) {
             screen.clearRect(0, 0, canvas.width, canvas.height);
             screen.beginPath();
             screen.arc(gameState.get("x"), gameState.get("y"), gameState.get("radius"), 0, Math.PI*2, false);
@@ -41,7 +41,7 @@ import { List, Map } from "immutable";
             screen.fill();
             screen.closePath();
         };
-        const runGameRenderingCycle = gameState => {
+        function runGameRenderingCycle(gameState) {
             draw(gameState);
             requestAnimationFrame(() => runGameRenderingCycle(update(gameState)));
         };
