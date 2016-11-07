@@ -23,7 +23,7 @@ import { List, Map } from "immutable";
             const newY = oldState.get("y") + (dt * oldState.get("vy"));
             const doReflectX = newX < oldState.get("radius") || newX > canvas.width - oldState.get("radius");
             const doReflectY = newY < oldState.get("radius") || newY > canvas.height - oldState.get("radius");
-            const newState = initialGameState.merge(Map({
+            const newState = oldState.merge(Map({
                 x: newX,
                 y: newY,
                 vx: doReflectX ? (oldState.get("vx") * -1) : oldState.get("vx"),
