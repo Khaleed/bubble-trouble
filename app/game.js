@@ -11,23 +11,25 @@ import { List, Map } from "immutable";
         const initialGameState = Map({
             x: canvas.width/2,
             y: canvas.height/2,
-            vx: 300,
-            vy: 80,
+            vx: 100,
+            vy: 200,
             color: "red",
             radius: 25
         });
 
         function update(oldState) {
             const dt = 0.02;
+            const g = 200;
+            const newVY = oldState.get("vy") + (g * dt);
             const newX = oldState.get("x") + (dt * oldState.get("vx"));
-            const newY = oldState.get("y") + (dt * oldState.get("vy"));
+            const newY = oldState.get("y") + (dt * newVY);
             const doReflectX = newX < oldState.get("radius") || newX > canvas.width - oldState.get("radius");
             const doReflectY = newY < oldState.get("radius") || newY > canvas.height - oldState.get("radius");
             const newState = oldState.merge(Map({
                 x: newX,
                 y: newY,
                 vx: doReflectX ? (oldState.get("vx") * -1) : oldState.get("vx"),
-                vy: doReflectY ? (oldState.get("vy") * -1) : oldState.get("vy")
+                vy: doReflectY ? newVY * -1 : newVY
             }));
             return newState;
         };
