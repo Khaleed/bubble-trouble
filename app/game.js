@@ -10,21 +10,21 @@ import { List, Map } from "immutable";
     window.addEventListener("load", () => {
         const screen = canvas.getContext("2d");
         const initialGameState = Map({
-            bubbleArray: [Map({
+            bubbleArray: List.of(Map({
                 x: canvas.width/2,
                 y: canvas.height/2,
                 vx: 100,
                 vy: 200,
                 color: "red",
                 radius: 25
-            }),Map({
+            }), Map({
                 x: canvas.width/2,
                 y: canvas.height/2,
                 vx: -100,
                 vy: 200,
                 color: "green",
                 radius: 25
-            })],
+            })),
             player: Map({
                 x: canvas.width/2,
                 w: 20,
@@ -35,12 +35,12 @@ import { List, Map } from "immutable";
 
         function updateBubble(oldBubble) {
             const dt = 0.02;
-            const g = 200;
-            const newVY = oldBubble.get("vy") + (g * dt);
+            const g = 200; // gravity
+            const newVY = oldBubble.get("vy") + (g * dt); // newVY = oldVY + acceleration * delta time
             const newX = oldBubble.get("x") + (dt * oldBubble.get("vx"));
             const newY = oldBubble.get("y") + (dt * newVY);
-            const doReflectX = newX < oldBubble.get("radius") || newX > canvas.width - oldBubble.get("radius");
-            const doReflectY = newY < oldBubble.get("radius") || newY > canvas.height - oldBubble.get("radius");
+            const doReflectX = newX < oldBubble.get("radius") || newX > canvas.width - oldBubble.get("radius"); // detect collision with left and right canvas border
+            const doReflectY = newY < oldBubble.get("radius") || newY > canvas.height - oldBubble.get("radius"); // detect collision with top and bottom canvas border
             const newBubble = oldBubble.merge(Map({
                 x: newX,
                 y: newY,
@@ -51,7 +51,7 @@ import { List, Map } from "immutable";
         };
 
         function updateGame(oldState) {
-            const playerNewX = oldState.get("player").get("x") + (keys.leftPressedKey ? -10: 0 + keys.rightPressedKey ? 10: 0);
+            const playerNewX = oldState.get("player").get("x") + (keys.leftPressedKey ? -10: 0 + keys.rightPressedKey ? 10: 0); // refactor the keys bit
             const newState = Map({
                 bubbleArray: oldState.get("bubbleArray").map(updateBubble),
                 player: oldState.get("player").merge({x: playerNewX})
