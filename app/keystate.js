@@ -1,5 +1,5 @@
 /*eslint fp/no-unused-expression: 0, fp/no-nil: 0 */
-export default {
+const KeyState = {
     rightPressedKey: false,
     leftPressedKey: false,
     spacePressedKey: false,
@@ -7,25 +7,27 @@ export default {
     addListeners: function() {
         document.addEventListener("keyup", e => {
             if (e.keyCode === 37) {
-                this.leftPressedKey = false;
+                KeyState.leftPressedKey = false;
             } else if (e.keyCode === 39) {
-                this.rightPressedKey = false;
+                KeyState.rightPressedKey = false;
             } else if (e.keyCode === 32) {
-                this.spacePressedKey = false;
+                KeyState.spacePressedKey = false;
             } else if (e.keyCode === 82) {
-                this.rPressedKey = false;
+                KeyState.rPressedKey = false;
             }
         });
         document.addEventListener('keydown', e => {
             if (e.keyCode === 37) {
-                this.leftPressedKey = true;
+                KeyState.leftPressedKey = true;
             } else if (e.keyCode === 39) {
-                this.rightPressedKey = true;
+                KeyState.rightPressedKey = true;
             } else if (e.keyCode === 32) {
-                this.spacePressedKey = true;
+                KeyState.spacePressedKey = true;
             } else if (e.keyCode === 82) {
-                this.rPressedKey = true;
+                KeyState.rPressedKey = true;
             }
         });
     }
 };
+
+export default KeyState;
