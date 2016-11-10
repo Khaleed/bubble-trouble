@@ -1,4 +1,4 @@
-/*eslint fp/no-unused-expression: 0, fp/no-nil: 0 */
+/*eslint fp/no-unused-expression: 0, fp/no-nil: 0, fp/no-mutation: 0*/
 const KeyState = {
     rightPressedKey: false,
     leftPressedKey: false,
@@ -16,7 +16,7 @@ const KeyState = {
                 KeyState.rPressedKey = false;
             }
         });
-        document.addEventListener('keydown', e => {
+        document.addEventListener("keydown", e => {
             if (e.keyCode === 37) {
                 KeyState.leftPressedKey = true;
             } else if (e.keyCode === 39) {
