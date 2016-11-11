@@ -4,7 +4,7 @@ Pick up higher-level problem solving skills and dive deeper into writing functio
 
 ## Game Logic
 
-This is an implementation of the retro game Bubble Struggle. The player must shoot the bubbles before they reach the player to complete the level. The bubbles randomly bounce around the screen. 
+This is an implementation of the retro game Bubble Trouble. The player must shoot the bubbles before they reach the player to complete the level. The bubbles randomly bounce around the screen and split into further bubbles. 
 
 ## Approach
 
