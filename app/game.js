@@ -61,7 +61,7 @@ import { List, Map } from "immutable";
                 x: newX,
                 y: newY,
                 vx: doReflectX(newX, oldBubble, canvas.width) ? (oldBubble.get("vx") * -1) : oldBubble.get("vx"),
-                vy: doReflectY(newY, oldBubble, canvas.height) ? newVY * -1 : newVY
+                vy: doReflectY(newY, oldBubble, canvas.height) ? -500 : newVY
             }));
             return newBubble;
         };
