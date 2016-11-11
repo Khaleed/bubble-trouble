@@ -33,25 +33,44 @@ import { List, Map } from "immutable";
             })
         });
 
+        function getNewVY(oldBubble, dt, g) {
+            return oldBubble.get("vy") + (g * dt); // newVY = oldVY + acceleration * delta time
+        }
+
+        function getNewX(oldBubble, dt) {
+            return oldBubble.get("x") + (dt * oldBubble.get("vx"));
+        }
+
+        function getNewY(oldBubble, dt, newVY) {
+            return oldBubble.get("y") + (dt * newVY);
+        }
+
+        function doReflectX(newX, oldBubble, canvasWidth) {
+            return newX < oldBubble.get("radius") || newX > canvas.width - oldBubble.get("radius"); // detect collision with left and right canvas border
+        }
+
+        function doReflectY(newY, oldBubble, canvasHeight) {
+            return newY < oldBubble.get("radius") || newY > canvas.height - oldBubble.get("radius"); // detect collision with top and bottom canvas border
+        }
+
         function updateBubble(oldBubble) {
-            const dt = 0.02;
-            const g = 200; // gravity
-            const newVY = oldBubble.get("vy") + (g * dt); // newVY = oldVY + acceleration * delta time
-            const newX = oldBubble.get("x") + (dt * oldBubble.get("vx"));
-            const newY = oldBubble.get("y") + (dt * newVY);
-            const doReflectX = newX < oldBubble.get("radius") || newX > canvas.width - oldBubble.get("radius"); // detect collision with left and right canvas border
-            const doReflectY = newY < oldBubble.get("radius") || newY > canvas.height - oldBubble.get("radius"); // detect collision with top and bottom canvas border
+            const newVY = getNewVY(oldBubble, 0.02, 200);
+            const newX = getNewX(oldBubble, 0.02);
+            const newY = getNewY(oldBubble, 0.02, newVY);
             const newBubble = oldBubble.merge(Map({
                 x: newX,
                 y: newY,
-                vx: doReflectX ? (oldBubble.get("vx") * -1) : oldBubble.get("vx"),
-                vy: doReflectY ? newVY * -1 : newVY
+                vx: doReflectX(newX, oldBubble, canvas.width) ? (oldBubble.get("vx") * -1) : oldBubble.get("vx"),
+                vy: doReflectY(newY, oldBubble, canvas.height) ? newVY * -1 : newVY
             }));
             return newBubble;
         };
 
         function updateGame(oldState) {
-            const playerNewX = oldState.get("player").get("x") + (keys.leftPressedKey ? -10: 0 + keys.rightPressedKey ? 10: 0); // refactor the keys bit
+            const player = oldState.get("player");
+            const leftMovement = keys.leftPressedKey && player.get("x") > 0;
+            const rightMovement = keys.rightPressedKey && player.get("x") < (canvas.width - player.get("w"));
+            const playerNewX = oldState.get("player").get("x") + (leftMovement ? -10: 0 + rightMovement ? 10: 0);
             const newState = Map({
                 bubbleArray: oldState.get("bubbleArray").map(updateBubble),
                 player: oldState.get("player").merge({x: playerNewX})
