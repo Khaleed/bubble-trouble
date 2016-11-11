@@ -30,7 +30,8 @@ import { List, Map } from "immutable";
                 w: 20,
                 h: 40,
                 color: "blue"
-            })
+            }),
+            arrows: List.of()
         });
 
         function getNewVY(oldBubble, dt, g) {
@@ -66,14 +67,27 @@ import { List, Map } from "immutable";
             return newBubble;
         };
 
+        function updateArrow(oldArrow) {
+            if (oldArrow === null) {
+                return null;
+            }
+            const newY = oldArrow.get("y") - 10;
+            const newArrow = oldArrow.merge({ y: newY });
+            return newY > 0 ? newArrow : null; // return null if there are no arrows
+        }
+
         function updateGame(oldState) {
             const player = oldState.get("player");
             const leftMovement = keys.leftPressedKey && player.get("x") > 0;
             const rightMovement = keys.rightPressedKey && player.get("x") < (canvas.width - player.get("w"));
-            const playerNewX = oldState.get("player").get("x") + (leftMovement ? -10: 0 + rightMovement ? 10: 0);
+            const playerNewX = player.get("x") + (leftMovement ? -10: 0 + rightMovement ? 10: 0);
+            const newArrowCond = keys.spacePressedKey && oldState.get("arrows").size === 0;
+            const newArrowList1 = newArrowCond ? oldState.get("arrows").push(Map({x: player.get("x") + (player.get("w") / 2) - 1, y: canvas.height, w: 3})) : oldState.get("arrows");
+            const newArrowList2 = newArrowList1.filter((arrow) => arrow !== null);
             const newState = Map({
                 bubbleArray: oldState.get("bubbleArray").map(updateBubble),
-                player: oldState.get("player").merge({x: playerNewX})
+                player: player.merge({x: playerNewX}),
+                arrows: newArrowList2.map(updateArrow)
             });
             return newState;
         }
@@ -91,9 +105,19 @@ import { List, Map } from "immutable";
             screen.fill();
             screen.closePath();
         };
+
+        function drawArrow(arrow) {
+            if (arrow === null) {
+                return;
+            }
+            screen.fillStyle = "white"; // eslint-disable-line fp/no-mutation
+            screen.fillRect(arrow.get("x"), arrow.get("y"), arrow.get("w"), canvas.height - arrow.get("y"));
+        }
+
         function runGameRenderingCycle(gameState) {
-            screen.clearRect(0, 0, canvas.width, canvas.height); // clear the screen
+            screen.clearRect(0, 0, canvas.width, canvas.height);
             gameState.get("bubbleArray").map(drawBubble);
+            gameState.get("arrows").map(drawArrow);
             drawPlayer(gameState.get("player"));
             requestAnimationFrame(() => runGameRenderingCycle(updateGame(gameState)));
         };
