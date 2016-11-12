@@ -4,11 +4,11 @@ Pick up higher-level problem solving skills and dive deeper into writing functio
 
 ## Game Logic
 
-This is an implementation of the retro game Bubble Trouble. The player must shoot the bubbles before they reach the player to complete the level. The bubbles randomly bounce around the screen and split into further bubbles. 
+This is an implementation of the retro game Bubble Trouble. The player must shoot the bubbles before they reach the player to complete each level. The bubbles randomly bounce around the screen and some of the larger ones split into smaller bubbles when shot. 
 
 ## Approach
 
-Drawing on the canvas, the game loop, and collision detection are all done without any libraries or frameworks. This project will be written in a functional style. It's not purely functional because of the limitations of JavaScript and I/O being inheritently impure. Instead of deep cloning objects and arrays, Immutable persistent data structures library is used.
+Drawing on the canvas, the game loop, and collision detection are all done without any libraries or frameworks. This project will be written in a functional style using the Elm Architecture: Model -> Update -> View. It's not purely functional because of the limitations of JavaScript and I/O being inheritently impure. Instead of deep cloning objects and arrays for immutability, Immutable JS - a persistent data structures library is used.
 
 ## Contributors
 
