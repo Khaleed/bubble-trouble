@@ -3,36 +3,13 @@
 import assets from "./assets";
 import keys from "./keystate";
 import { List, Map } from "immutable";
+import { initialGameState } from "./model";
 
 (function () {
     const canvas = assets.canvas;
     keys.addListeners();
     window.addEventListener("load", () => {
         const screen = canvas.getContext("2d");
-        const initialGameState = Map({
-            bubbleArray: List.of(Map({
-                x: canvas.width/2,
-                y: canvas.height/2,
-                vx: 100,
-                vy: 200,
-                color: "red",
-                radius: 25
-            }), Map({
-                x: canvas.width/2,
-                y: canvas.height/2,
-                vx: -100,
-                vy: 200,
-                color: "green",
-                radius: 25
-            })),
-            player: Map({
-                x: canvas.width/2,
-                w: 20,
-                h: 40,
-                color: "blue"
-            }),
-            arrows: List.of()
-        });
 
         function getNewVY(oldBubble, dt, g) {
             return oldBubble.get("vy") + (g * dt); // newVY = oldVY + acceleration * delta time
