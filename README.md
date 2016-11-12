@@ -8,7 +8,7 @@ This is an implementation of the retro game Bubble Trouble. The player must shoo
 
 ## Approach
 
-Drawing on the canvas, the game loop, and collision detection are all done without any libraries or frameworks. This project will be written in a functional style using the Elm Architecture: Model -> Update -> View. It's not purely functional because of the limitations of JavaScript and I/O being inheritently impure. Instead of deep cloning objects and arrays for immutability, Immutable JS - a persistent data structures library is used.
+Drawing on the canvas, the game loop, and collision detection are all done without any libraries or frameworks. This project is written in a functional style using the Elm Architecture: Model -> Update -> View. It's not purely functional because of the limitations of JavaScript and I/O being inheritently impure. Instead of deep cloning objects and arrays for immutability, Immutable JS - a persistent data structures library is used.
 
 ## Contributors
 
