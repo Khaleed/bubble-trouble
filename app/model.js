@@ -3,7 +3,7 @@ import { List, Map } from "immutable";
 
 const canvas = assets.canvas;
 
-export const initialGameState = Map({
+export const Model = Map({
     bubbleArray: List.of(Map({
         x: canvas.width/2,
         y: canvas.height/2,
