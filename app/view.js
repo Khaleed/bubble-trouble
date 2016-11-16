@@ -3,7 +3,7 @@
 import assets from "./assets";
 import keys from "./keystate";
 import { List, Map } from "immutable";
-import { initialGameState } from "./model";
+import { Model } from "./model";
 
 (function () {
     const canvas = assets.canvas;
@@ -98,6 +98,6 @@ import { initialGameState } from "./model";
             drawPlayer(gameState.get("player"));
             requestAnimationFrame(() => runGameRenderingCycle(updateGame(gameState)));
         };
-        runGameRenderingCycle(initialGameState);
+        runGameRenderingCycle(Model);
     });
 }());
