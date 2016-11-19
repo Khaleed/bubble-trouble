@@ -3,7 +3,7 @@
 import assets from "./assets";
 import keys from "./keystate";
 import { List, Map } from "immutable";
-import { GameState } from "./update";
+import GameState from "./update";
 import { Model } from "./model";
 
 (function () {
@@ -40,9 +40,11 @@ import { Model } from "./model";
             screen.clearRect(0, 0, canvas.width, canvas.height);
             gameState.get("bubbleArray").map(drawBubble);
             gameState.get("arrows").map(drawArrow);
+            // const immutableKeys = Map({keys});
+            // const newGameState = gameState.updateGameIfGameRunning(immutableKeys);
             drawPlayer(gameState.get("player"));
-            requestAnimationFrame(() => runGameRenderingCycle(updateGame(gameState)));
+            requestAnimationFrame(() => runGameRenderingCycle(gameState);
         };
-        runGameRenderingCycle(Model);
+        runGameRenderingCycle(GameState({inputs}));
     });
 }());
