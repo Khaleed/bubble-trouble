@@ -1,7 +1,7 @@
 import { Model } from "./model";
 import { List, Map } from "immutable";
 
-export default function GameState(args) {
+function GameState(args) {
     const { Inputs, Model } = args;
 
     function getNewVY(oldBubble, dt, g) {
@@ -64,3 +64,5 @@ export default function GameState(args) {
     // if there is no change in game state, return the initial Model
     return Model;
 }
+
+export default GameState;
