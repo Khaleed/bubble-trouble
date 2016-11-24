@@ -58,8 +58,5 @@
     "install": "^0.8.2",
     "jest-cli": "^16.0.2",
     "npm": "^4.0.2"
-  },
-  "jest": {
-    "testEnvironment": "node"
   }
 }
