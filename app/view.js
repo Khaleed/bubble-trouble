@@ -34,16 +34,28 @@ import { Model } from "./model";
                 return;
             }
             screen.fillStyle = "white"; // eslint-disable-line fp/no-mutation
-            screen.fillRect(arrow.get("x"), arrow.get("y"), arrow.get("w"), canvas.height - arrow.get("y"));
+            screen.fillRect(arrow.get("x"), arrow.get("y"), arrow.get("w"), arrow.get("yOrigin") - arrow.get("y"));
         }
 
-        function runGameRenderingCycle(gameState) {
+        function draw(gameState) {
             screen.clearRect(0, 0, canvas.width, canvas.height);
             gameState.get("bubbleArray").map(drawBubble);
             gameState.get("arrows").map(drawArrow);
             drawPlayer(gameState.get("player"));
-            requestAnimationFrame(() => runGameRenderingCycle(updateGame(gameState, keys, canvas)));
+        }
+
+        function runGameRenderingCycle(gameState, lastT) {
+            const t = new Date().getTime();
+            const dt = t - (lastT || t);
+            const frozenKeys = Object.assign({}, keys);
+            Object.freeze(frozenKeys);
+            draw(gameState);
+            requestAnimationFrame(
+                () => runGameRenderingCycle(
+                updateGame(gameState, frozenKeys, canvas.width, canvas.height, dt), t
+                )
+            );
         };
-        runGameRenderingCycle(Model);
+        runGameRenderingCycle(Model, 0);
     });
 }());
