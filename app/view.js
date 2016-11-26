@@ -1,13 +1,14 @@
 /*eslint fp/no-unused-expression: 0, fp/no-nil: 0 */
 
-import assets from "./assets";
+import { default as Html } from "./assets";
 import keys from "./keystate";
 import { List, Map } from "immutable";
-import GameState from "./update";
+import updateGame from "./update";
 import { Model } from "./model";
 
 (function () {
-    const canvas = assets.canvas;
+
+    const canvas = Html.canvas;
 
     keys.addListeners(); // interrogate key states
 
