@@ -1,5 +1,4 @@
 import { List, Map } from "immutable";
-import { default as inputs } from "./assets";
 
 function getNewVY(oldBubble, dt, g) {
     return oldBubble.get("vy") + (g * dt);// newVY = oldVY + acceleration * delta time
@@ -28,15 +27,15 @@ function updateBubble(oldBubble) {
     const newBubble = oldBubble.merge(Map({
         x: newX,
         y: newY,
-        vx: doReflectX(newX, oldBubble, inputs.canvas.width) ? (oldBubble.get("vx") * -1) : oldBubble.get("vx"),
-        vy: doReflectY(newY, oldBubble, inputs.canvas.height) ? -500 : newVY
+        vx: doReflectX(newX, oldBubble, 1200) ? (oldBubble.get("vx") * -1) : oldBubble.get("vx"), // pass canvas instead
+        vy: doReflectY(newY, oldBubble, 800) ? -500 : newVY
     }));
     return newBubble;
 };
 
 function updateArrow(oldArrow) {
     if (oldArrow === null) {
-        return null;
+        return null; // use a mayBe
     }
     const newY = oldArrow.get("y") - 10;
     const newArrow = oldArrow.merge({ y: newY });
@@ -49,7 +48,7 @@ export default function updateGame(oldState, keys, canvas) {
     const rightMovement = keys.rightPressedKey && player.get("x") < (canvas.width - player.get("w"));
     const playerNewX = player.get("x") + (leftMovement ? -10: 0 + rightMovement ? 10: 0);
     const newArrowCond = keys.spacePressedKey && oldState.get("arrows").size === 0;
-    const newArrowList1 = newArrowCond ? oldState.get("arrows").push(Map({x: player.get("x") + (player.get("w") / 2) - 1, y: inputs.canvas.height, w: 3})) : oldState.get("arrows");
+    const newArrowList1 = newArrowCond ? oldState.get("arrows").push(Map({x: player.get("x") + (player.get("w") / 2) - 1, y: canvas.height, w: 3})) : oldState.get("arrows");
     const newArrowList2 = newArrowList1.filter(arrow => arrow !== null);
     const newGameState = Map({
         bubbleArray: oldState.get("bubbleArray").map(updateBubble),
