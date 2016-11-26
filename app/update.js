@@ -27,18 +27,19 @@ function updateBubble(oldBubble) {
     return oldBubble.merge(Map({
         x: newX,
         y: newY,
-        vx: doReflectX(newX, oldBubble, 1200) ? (oldBubble.get("vx") * -1) : oldBubble.get("vx"), // pass canvas instead
+        vx: doReflectX(newX, oldBubble, 1200) ? (oldBubble.get("vx") * -1) : oldBubble.get("vx"),
         vy: doReflectY(newY, oldBubble, 800) ? -500 : newVY
     }));
 };
 
 function updateArrow(oldArrow) {
+    const step = 10;
     if (oldArrow === null) {
         return null; // use a mayBe
     }
-    const newY = oldArrow.get("y") - 10; // variable instead of hard-coding
-    if (!(newY > 0)) return null; // return early
-    return oldArrow.merge({ y: newY });
+    const newY = oldArrow.get("y") - step;
+    const newArrow = oldArrow.merge({ y: newY});
+    return newY > 0 ? newArrow : null;
 }
 
 function getPlayerNewX(player, keys, canvasWidth) {
@@ -49,23 +50,35 @@ function getPlayerNewX(player, keys, canvasWidth) {
     return player.get("x") + deltaInMovement;
 }
 
-function getNewArrowList(oldState, keys, canvas) {
+function isPlayerShooting(oldState, keys) {
+    return keys.spacePressedKey && oldState.get("arrows").size === 0;
+}
+
+function createArrow(oldState, keys, arrows, newArrow) {
+    return isPlayerShooting(oldState, keys) ? arrows.push(newArrow) : arrows; // eslint-disable-line fp/no-mutating-methods
+}
+
+function getNewArrowList(oldState, keys, canvasHeight) {
     const player = oldState.get("player");
     const arrows = oldState.get("arrows");
-    const newArrowCond = keys.spacePressedKey && arrows.size === 0;
-    const newArrow = Map({x: player.get("x") + (player.get("w") / 2) - 1, y: canvas.height, w: 3});
-    const arrowList = newArrowCond ? arrows.push(newArrow) : arrows;
+    const YOrigin = canvasHeight - player.get("h");
+    const newArrow = Map({
+        x: player.get("x") + (player.get("w") / 2) - 1,
+        y: YOrigin,
+        yOrigin: YOrigin,
+        w: 3});
+    const arrowList = createArrow(oldState, keys, arrows, newArrow);
     return arrowList.filter(arrow => arrow !== null)
                     .map(updateArrow);
 }
 
-export default function updateGame(oldState, keys, canvas) { // export canvas height and canvas width
+export default function updateGame(oldState, keys, canvasWidth, canvasHeight) { // export canvas height and canvas width
     const player = oldState.get("player");
-    const playerNewX = getPlayerNewX(player, keys, canvas.width);
+    const playerNewX = getPlayerNewX(player, keys, canvasWidth, canvasHeight);
     const newGameState = Map({
         bubbleArray: oldState.get("bubbleArray").map(updateBubble),
-        player: player.merge({x: playerNewX}),
-        arrows: getNewArrowList(oldState, keys, canvas)
+        player: player.merge({ x: playerNewX }),
+        arrows: getNewArrowList(oldState, keys, canvasHeight)
     });
     return newGameState;
 }
