@@ -1,7 +1,7 @@
-import assets from "./assets";
+import  { default as Html } from "./assets";
 import { List, Map } from "immutable";
 
-const canvas = assets.canvas;
+const canvas = Html.canvas;
 
 export const Model = Map({
     bubbleArray: List.of(Map({
