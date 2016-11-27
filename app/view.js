@@ -52,7 +52,7 @@ import { Model } from "./model";
             draw(gameState);
             requestAnimationFrame(
                 () => runGameRenderingCycle(
-                updateGame(gameState, frozenKeys, canvas.width, canvas.height, dt), t
+                    updateGame(gameState, frozenKeys, canvas.width, canvas.height, dt), t
                 )
             );
         };
