@@ -11,12 +11,11 @@ function getNewX(x, dt, vx) {
 function getNewY(y, dt, newVY) {
     return y + (dt * newVY);
 }
-
 function doReflectX(newX, radius, canvasWidth) {
     return newX < radius || newX > canvasWidth - radius; // collision with left and right canvas border
 }
 
-function doReflectY(newY, radius, canvasHeight) {
+function doReflectY(newY, radius, canvasHeight ) {
     return newY < radius || newY > canvasHeight - radius; // detect collision with top and bottom canvas border
 }
 
@@ -44,32 +43,31 @@ function updateArrow(arrow) {
     return newY > 0 ? newArrow : null;
 }
 
-function updatePlayerMovement(player, keys, canvasWidth) {
+function updatePlayerMovement(keys, player, canvasWidth) {
     const step = 10;
-    const isMovingleft = keys.leftPressedKey && player.get("x") > 0;
-    const isMovingRight = keys.rightPressedKey && player.get("x") < (canvasWidth - player.get("w"));
+    const playerX = player.get("x");
+    const isMovingleft = keys.leftPressedKey && playerX > 0;
+    const isMovingRight = keys.rightPressedKey && playerX < (canvasWidth - player.get("w"));
     const deltaInMovement = (isMovingleft ? -step: 0) + (isMovingRight ? step: 0);
-    return player.get("x") + deltaInMovement;
+    return playerX + deltaInMovement;
 }
 
-function isPlayerShooting(state, keys) {
-    return keys.spacePressedKey && state.get("arrows").size === 0;
+function isPlayerShooting(keys, arrows) {
+    return keys.spacePressedKey && arrows.size === 0;
 }
 
-function createArrow(state, keys, arrows, newArrow) {
-    return isPlayerShooting(state, keys) ? arrows.push(newArrow) : arrows; // eslint-disable-line fp/no-mutating-methods
+function createArrow(keys, arrows, newArrow) {
+    return isPlayerShooting(keys, arrows) ? arrows.push(newArrow) : arrows; // eslint-disable-line fp/no-mutating-methods
 }
 
-function getNewArrowList(state, keys, canvasHeight) {
-    const player = state.get("player");
-    const arrows = state.get("arrows");
+function getNewArrowList(keys, player, arrows, canvasHeight) {
     const YOrigin = canvasHeight - player.get("h");
     const newArrow = Map({
         x: player.get("x") + (player.get("w") / 2) - 1,
         y: YOrigin,
         yOrigin: YOrigin,
         w: 3});
-    const arrowList = createArrow(state, keys, arrows, newArrow);
+    const arrowList = createArrow(keys, arrows, newArrow);
     return arrowList.filter(arrow => arrow !== null)
                     .map(updateArrow);
 }
@@ -77,11 +75,12 @@ function getNewArrowList(state, keys, canvasHeight) {
 export default function updateGame(state, keys, canvasWidth, canvasHeight) { // export canvas height and canvas width
     const player = state.get("player");
     const bubble = state.get("bubbleArray");
-    const playerNewX = updatePlayerMovement(player, keys, canvasWidth, canvasHeight);
+    const arrows = state.get("arrows");
+    const playerNewX = updatePlayerMovement(keys, player, canvasWidth);
     const newGameState = Map({
         bubbleArray: bubble.map(updateBubble),
         player: player.merge({ x: playerNewX }),
-        arrows: getNewArrowList(state, keys, canvasHeight)
+        arrows: getNewArrowList(keys, player, arrows, canvasHeight)
     });
     return newGameState;
 }
