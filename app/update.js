@@ -68,8 +68,12 @@ function getNewArrowList(keys, player, arrows, canvasHeight) {
         yOrigin: YOrigin,
         w: 3});
     const arrowList = createArrow(keys, arrows, newArrow);
-    return arrowList.filter(arrow => arrow !== null)
-                    .map(updateArrow);
+    return arrowList;
+}
+
+function updateArrowList(ary) {
+    return ary.filter(arrow => arrow !== null)
+              .map(updateArrow);
 }
 
 export default function updateGame(state, keys, canvasWidth, canvasHeight) { // export canvas height and canvas width
@@ -80,7 +84,9 @@ export default function updateGame(state, keys, canvasWidth, canvasHeight) { // 
     const newGameState = Map({
         bubbleArray: bubble.map(updateBubble),
         player: player.merge({ x: playerNewX }),
-        arrows: getNewArrowList(keys, player, arrows, canvasHeight)
+        arrows: updateArrowList(
+            getNewArrowList(keys, player, arrows, canvasHeight)
+        )
     });
     return newGameState;
 }
