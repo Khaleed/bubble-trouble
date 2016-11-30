@@ -1,4 +1,4 @@
 export default {
     canvas: document.getElementById("screen"),
-    status: document.getElementById("satus")
+    status: document.getElementById("status")
 };
