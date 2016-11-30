@@ -1,7 +1,16 @@
 /*eslint fp/no-unused-expression: 0, fp/no-nil: 0, fp/no-mutation: 0*/
 import { Map } from "immutable";
 
-function interrogateKeyState(keys) {
+export const keys = {
+    state: Map({
+        isRightKeyPressed: false,
+        isLeftKeyPressed: false,
+        isSpaceKeyPressed: false,
+        isRKeyPressed: false
+    })
+};
+
+export function interrogateKeyState(keys) {
     document.addEventListener("keyup", e => {
         if (e.keyCode === 37) {
             keys.state = keys.state.set("isLeftKeyPressed", false);
@@ -27,4 +36,3 @@ function interrogateKeyState(keys) {
     });
 }
 
-export default interrogateKeyState;
