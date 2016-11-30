@@ -1,7 +1,7 @@
 /*eslint fp/no-unused-expression: 0, fp/no-nil: 0 */
 
 import { default as Html } from "./assets";
-import keys from "./keystate";
+import interrogateKeyState from "./keystate";
 import { List, Map } from "immutable";
 import updateGame from "./update";
 import { Model } from "./model";
@@ -10,7 +10,16 @@ import { Model } from "./model";
 
     const canvas = Html.canvas;
 
-    keys.addListeners(); // interrogate key states
+    const keys = {
+        state: Map({
+            isRightKeyPressed: false,
+            isLeftKeyPressed: false,
+            isSpaceKeyPressed: false,
+            isRKeyPressed: false
+        })
+    };
+
+    interrogateKeyState(keys);
 
     window.addEventListener("load", () => {
         const screen = canvas.getContext("2d");

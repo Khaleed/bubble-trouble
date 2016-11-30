@@ -46,14 +46,14 @@ function updateArrow(arrow) {
 function updatePlayerMovement(keys, player, canvasWidth) {
     const step = 10;
     const playerX = player.get("x");
-    const isMovingleft = keys.leftPressedKey && playerX > 0;
-    const isMovingRight = keys.rightPressedKey && playerX < (canvasWidth - player.get("w"));
+    const isMovingleft = keys.state.get("isLeftKeyPressed") && playerX > 0;
+    const isMovingRight = keys.state.get("isRightKeyPressed") && playerX < (canvasWidth - player.get("w"));
     const deltaInMovement = (isMovingleft ? -step: 0) + (isMovingRight ? step: 0);
     return playerX + deltaInMovement;
 }
 
 function isPlayerShooting(keys, arrows) {
-    return keys.spacePressedKey && arrows.size === 0;
+    return keys.state.get("isSpaceKeyPressed") && arrows.size === 0;
 }
 
 function createArrow(keys, arrows, newArrow) {
