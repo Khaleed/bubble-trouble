@@ -1,6 +1,6 @@
 /*eslint fp/no-unused-expression: 0, fp/no-nil: 0 */
 
-import { default as Html } from "./assets";
+import { default as Html } from "./html";
 import interrogateKeyState from "./keystate";
 import { List, Map } from "immutable";
 import updateGame from "./update";
