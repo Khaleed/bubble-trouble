@@ -29,7 +29,6 @@ import { Model } from "./model";
             screen.fillRect(player.get("x"), canvas.height - player.get("h"), player.get("w"), player.get("h"));
         }
 
-        // impure rendering fn that populates canvas
         function drawBubble(bubble) {
             screen.beginPath();
             screen.arc(bubble.get("x"), bubble.get("y"), bubble.get("radius"), 0, Math.PI*2, false);
@@ -53,15 +52,13 @@ import { Model } from "./model";
             drawPlayer(gameState.get("player"));
         }
 
-        function runGameRenderingCycle(gameState, lastT) {
-            const t = new Date().getTime();
-            const dt = t - (lastT || t);
-            const frozenKeys = Object.assign({}, keys);
-            Object.freeze(frozenKeys);
+        function runGameRenderingCycle(gameState, lastTime) {
+            const time = new Date().getTime();
+            const deltaInTime = time - (lastTime || time);
             draw(gameState);
             requestAnimationFrame(
                 () => runGameRenderingCycle(
-                    updateGame(gameState, frozenKeys, canvas.width, canvas.height, dt), t
+                    updateGame(gameState, keys, canvas.width, canvas.height, deltaInTime), time
                 )
             );
         };
