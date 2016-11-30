@@ -1,4 +1,4 @@
-import  { default as Html } from "./assets";
+import  { default as Html } from "./html";
 import { List, Map } from "immutable";
 
 const canvas = Html.canvas;
