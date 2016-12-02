@@ -50,6 +50,6 @@ Ralph Barton.
 
 ## Future Plans
 
-### Add units tests
-### Finish a working version of level 1 of the game
-### Add two more levels with increasing degree of difficulty 
+Add units tests
+Finish a working version of level 1 of the game
+Add two more levels with increasing degree of difficulty 
