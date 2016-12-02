@@ -14,7 +14,7 @@ Drawing on the canvas, the game loop, and collision detection are all done witho
 
 ### Dependencies
 
-First you need to intall Yarn by following instructions on https://yarnpkg.com/en/docs/install 
+First you need to intall `yarn` by following instructions on https://yarnpkg.com/en/docs/install 
 
 To get dependencies
 
