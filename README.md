@@ -46,8 +46,6 @@ To run tests
 
 Ralph Barton
 
-<a href='http://www.recurse.com' title='Made with love at the Recurse Center'><img src='https://cloud.githubusercontent.com/assets/2883345/11322975/9e575dce-910b-11e5-9f47-1fb1b530a4bd.png' height='75px'/></a>
-
 ## Future Plans
 
 Add units tests
@@ -55,3 +53,6 @@ Add units tests
 Finish a working version of level 1 of the game
 
 Add two more levels with increasing degree of difficulty 
+
+<a href='http://www.recurse.com' title='Made with love at the Recurse Center'><img src='https://cloud.githubusercontent.com/assets/2883345/11322975/9e575dce-910b-11e5-9f47-1fb1b530a4bd.png' height='75px'/></a>
+
