@@ -16,9 +16,13 @@ Drawing on the canvas, the game loop, and collision detection are all done witho
 
 First you need to intall Yarn by following instructions on https://yarnpkg.com/en/docs/install 
 
-To get dependencies run `yarn install` or `npm install`
+To get dependencies
 
-Install Webpack globally `yarn global add webpack-devserver webpack` or `npm install webpack-devserver webpack -g`
+`yarn install` or `npm install`
+
+Install Webpack globally 
+
+`yarn global add webpack-devserver webpack` or `npm install webpack-devserver webpack -g`
 
 ### Server
 
@@ -28,7 +32,7 @@ To serve at https://localhost:3000/public
 
 ### Build
 
-To build when NODE_ENV=Production
+To build when NODE_ENV is set to production
 
 `yarn run deploy` or `npm run deploy`
 
