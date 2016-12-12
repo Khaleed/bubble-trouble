@@ -5,11 +5,11 @@ const getNewVY = (vy, dt, g) => vy + (g * dt);// newVY = oldVY + acceleration * 
 
 const getNewX = (x, dt, vx) => x + (dt * vx);
 
-const getNewY = (y, dt, newVY) => dt * newVY;
+const getNewY = (y, dt, newVY) => y + (dt * newVY);
 
 const doReflectX = (newX, radius, canvasWidth) => newX < radius || newX > (canvasWidth - radius); // collision with left and right canvas border
 
-const doReflectY= (newY, radius, canvasHeight) => newY < radius || newY > (canvasHeight - radius); // detect collision with top and bottom canvas border
+const doReflectY = (newY, radius, canvasHeight) => newY < radius || newY > (canvasHeight - radius); // detect collision with top and bottom canvas border
 
 const updateBubble = bubble => {
     const vX = bubble.get("vx");
