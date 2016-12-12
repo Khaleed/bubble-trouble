@@ -110,4 +110,4 @@ export const updateGame = (state, keys, canvasWidth, canvasHeight, dt) => { // e
         )
     });
     return newGameState;
-}
+};
