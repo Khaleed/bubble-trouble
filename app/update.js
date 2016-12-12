@@ -57,14 +57,47 @@ const getNewArrowList = (keys, player, arrows, canvasHeight) => {
         w: 3});
     const arrowList = createArrow(keys, arrows, newArrow);
     return arrowList;
-}
+};
 
-function updateArrowList(ary) {
-    return ary.filter(arrow => arrow !== null)
-              .map(updateArrow);
-}
+const updateArrowList = ary => ary.filter(arrow => arrow !== null)
+                                  .map(updateArrow);
 
-export default function updateGame(state, keys, canvasWidth, canvasHeight) { // export canvas height and canvas width
+
+// (bubble, laser) -> bool
+// const isArrowStrikingBubble = (bubble, arrow) => {
+//     const B_r = bubble.get("x") + bubble.get("radius");
+//     const B_l = bubble.get("x") - bubble.get("radius");
+//     const A_r = arrow.get("x") + arrow.get("w");
+//     const A_l = arrow.get("x");
+//     const A_y = arrow.get("y");
+//     const B_y = bubble.get("y");
+//     // detect if arrow tip underneath bubble center
+//     if (A_y > B_y) {
+//         const B_x = bubble.get("x");
+//         const r = bubble.get("radius");
+//         const dist1 = dist(B_x - A_r, B_y - A_y);
+//         const dist2 = dist(B_x - A_l, B_y - A_y);
+//         return (dist1 < r) || (dist2 < r);
+//     } else { // detect if arrow tip is above bubble center
+//         return (B_r > A_l) && (B_l < A_r);
+//     }
+// };
+
+// const getArrowsAndBubbles = (arrowList, bubbleList) => {
+//     arrowList.reduce((blist, arrow) => {
+//         // see if the arrow collides with any bubbles in bubble list
+//         blist.reduce((newBlist, bubble) => {
+//             if (isArrowStrikingBubble(bubble, arrow)) {
+//                 // add 2 new bubbles to new bubble list
+//             } else {
+//                 // add original bubble into new bubble list
+//                 newBlist.push(bubble);
+//             }
+//         }, List.of());
+//     }, bubbleList);
+// };
+
+export const updateGame = (state, keys, canvasWidth, canvasHeight, dt) => { // export canvas height and canvas width
     const player = state.get("player");
     const bubble = state.get("bubbleArray");
     const arrows = state.get("arrows");
