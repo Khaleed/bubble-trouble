@@ -1,5 +1,5 @@
 import { List, Map } from "immutable";
-import { dist } from "./helpers";
+import { dist, curry, compose } from "./helpers";
 
 const getNewVY = (vy, dt, g) => vy + (g * dt);// newVY = oldVY + acceleration * delta time
 
@@ -61,7 +61,6 @@ const getNewArrowList = (keys, player, arrows, canvasHeight) => {
 
 const updateArrowList = ary => ary.filter(arrow => arrow !== null)
                                   .map(updateArrow);
-
 
 // (bubble, laser) -> bool
 // const isArrowStrikingBubble = (bubble, arrow) => {
