@@ -1,5 +1,5 @@
 import { List, Map } from "immutable";
-import { dist, curry, compose } from "./helpers";
+import { dist, partial, compose } from "./helpers";
 
 // getNewVY :: (Number, Number, Number) -> Number
 const getNewVY = (vy, dt, g) => vy + (g * dt);
