@@ -70,28 +70,38 @@ const getNewArrows = (keys, player, arrows, canvasHeight) => {
     return arrowList;
 };
 
-const updateArrowList = ary => ary.filter(arrow => arrow !== null)
-                                  .map(updateArrow);
+// filterArrows :: List -> List
+const filterArrows = ary => ary.filter(x => x !== null);
 
-// (bubble, laser) -> bool
-// const isArrowStrikingBubble = (bubble, arrow) => {
-//     const B_r = bubble.get("x") + bubble.get("radius");
-//     const B_l = bubble.get("x") - bubble.get("radius");
-//     const A_r = arrow.get("x") + arrow.get("w");
-//     const A_l = arrow.get("x");
-//     const A_y = arrow.get("y");
-//     const B_y = bubble.get("y");
-//     // detect if arrow tip underneath bubble center
-//     if (A_y > B_y) {
-//         const B_x = bubble.get("x");
-//         const r = bubble.get("radius");
-//         const dist1 = dist(B_x - A_r, B_y - A_y);
-//         const dist2 = dist(B_x - A_l, B_y - A_y);
-//         return (dist1 < r) || (dist2 < r);
-//     } else { // detect if arrow tip is above bubble center
-//         return (B_r > A_l) && (B_l < A_r);
-//     }
-// };
+// updateArrows :: List -> List
+const updateArrows = ary => ary.map(updateArrow);
+
+// getUpdatedArrows :: List -> List
+const getUpdatedArrows = compose(updateArrows, filterArrows);
+
+// isArrowStrikingBubble :: (Map, Map) -> bool
+const isArrowStrikingBubble = (bubble, arrow) => {
+    const bubbleXPos = bubble.get("x");
+    const bubble_r = bubble.get("radius");
+    const arrowXPos = bubble.get("x");
+    const arrowYPos = arrow.get("y");
+    const B_r = bubbleXPos + bubble_r;
+    const B_l = bubbleXPos - bubble_r;
+    const A_r = arrowXPos + arrow.get("w");
+    const A_l = arrowXPos;
+    const A_y = arrow.get("y");
+    const B_y = bubble.get("y");
+    // detect if arrow tip is beneath bubble center
+    if (A_y > B_y) {
+        const B_x = bubbleXPos;
+        const r = bubbleRad;
+        const dist1 = dist(B_x - A_r, B_y - A_y);
+        const dist2 = dist(B_x - A_l, B_y - A_y);
+        return (dist1 < r) || (dist2 < r);
+    } else { // detect if arrow tip is above bubble center
+        return (B_r > A_l) && (B_l < A_r);
+    }
+};
 
 // const getArrowsAndBubbles = (arrowList, bubbleList) => {
 //     arrowList.reduce((blist, arrow) => {
@@ -107,17 +117,17 @@ const updateArrowList = ary => ary.filter(arrow => arrow !== null)
 //     }, bubbleList);
 // };
 
+// updateGame :: (Model, Obj, Number, Number, Number ) -> Model
 export const updateGame = (state, keys, canvasWidth, canvasHeight, dt) => { // export canvas height and canvas width
     const player = state.get("player");
     const bubble = state.get("bubbleArray");
     const arrows = state.get("arrows");
     const playerNewX = updatePlayerMovement(keys, player, canvasWidth);
+    const newArrows = getNewArrows(keys, player, arrows, canvasHeight);
     const newGameState = Map({
         bubbleArray: bubble.map(updateBubble),
         player: player.merge({ x: playerNewX }),
-        arrows: updateArrowList(
-            getNewArrowList(keys, player, arrows, canvasHeight)
-        )
+        arrows: getUpdatedArrows(newArrows)
     });
     return newGameState;
 };
