@@ -1,16 +1,22 @@
 import { List, Map } from "immutable";
 import { dist, curry, compose } from "./helpers";
 
-const getNewVY = (vy, dt, g) => vy + (g * dt);// newVY = oldVY + acceleration * delta time
+// getNewVY :: (Number, Number, Number) -> Number
+const getNewVY = (vy, dt, g) => vy + (g * dt);
 
+// getNewX :: (Number, Number, Number) -> Number
 const getNewX = (x, dt, vx) => x + (dt * vx);
 
+//getNewY :: (Number, Number, Number) -> Number
 const getNewY = (y, dt, newVY) => y + (dt * newVY);
 
-const doReflectX = (newX, radius, canvasWidth) => newX < radius || newX > (canvasWidth - radius); // collision with left and right canvas border
+// doReflectX :: (Number, Number, Number) -> Boolean
+const doReflectX = (newX, radius, canvasWidth) => newX < radius || newX > (canvasWidth - radius);
 
-const doReflectY = (newY, radius, canvasHeight) => newY < radius || newY > (canvasHeight - radius); // detect collision with top and bottom canvas border
+// doReflectY :: (Number, Number, Number) -> Boolean
+const doReflectY = (newY, radius, canvasHeight) => newY < radius || newY > (canvasHeight - radius);
 
+// updateBubble :: Map -> Map
 const updateBubble = bubble => {
     const vX = bubble.get("vx");
     const radius = bubble.get("radius");
@@ -25,6 +31,7 @@ const updateBubble = bubble => {
     }));
 };
 
+// updateArrow :: Map -> MayBe || Map
 const updateArrow = arrow => {
     const step = 10;
     if (arrow === null) {
@@ -35,6 +42,7 @@ const updateArrow = arrow => {
     return newY > 0 ? newArrow : null;
 };
 
+// updatePlayerMovement :: (Obj, Map, Number) -> Number
 const updatePlayerMovement = (keys, player, canvasWidth) => {
     const step = 10;
     const playerX = player.get("x");
@@ -44,12 +52,15 @@ const updatePlayerMovement = (keys, player, canvasWidth) => {
     return playerX + deltaInMovement;
 };
 
+// isPlayerShooting :: (Obj, List) -> Boolean
 const isPlayerShooting = (keys, arrows) => keys.state.get("isSpaceKeyPressed") && arrows.size === 0;
 
+// createArrow :: (Obj, List, Map) -> List
 const createArrow = (keys, arrows, newArrow) => isPlayerShooting(keys, arrows) ? arrows.push(newArrow) : arrows; // eslint-disable-line fp/no-mutating-methods
 
-const getNewArrowList = (keys, player, arrows, canvasHeight) => {
-    const YOrigin = canvasHeight - player.get("h");
+// getNewArrows :: (Obj, Map, List, Number) -> List
+const getNewArrows = (keys, player, arrows, canvasHeight) => {
+    const YOrigin = canvasHeight - player.get("h"); // modify to ensure arrows are shot from the floor
     const newArrow = Map({
         x: player.get("x") + (player.get("w") / 2) - 1,
         y: YOrigin,
