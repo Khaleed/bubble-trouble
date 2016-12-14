@@ -79,26 +79,26 @@ const getUpdatedArrows = compose(updateArrows, filterArrows);
 
 // isArrowStrikingBubble :: (Map, Map) -> bool
 const isArrowStrikingBubble = (bubble, arrow) => {
-    const bubbleXPos = bubble.get("x");
-    const bubble_r = bubble.get("radius");
-    const arrowXPos = bubble.get("x");
-    const arrowYPos = arrow.get("y");
-    const B_r = bubbleXPos + bubble_r;
-    const B_l = bubbleXPos - bubble_r;
-    const A_r = arrowXPos + arrow.get("w");
-    const A_l = arrowXPos;
+    const bubbleXpos = bubble.get("x");
+    const bubble_rad = bubble.get("radius");
+    const arrowXpos = bubble.get("x");
+    const arrowYpos = arrow.get("y");
+    const B_r = bubbleXpos + bubble_rad;
+    const B_l = bubbleXpos - bubble_rad;
+    const A_r = arrowXpos + arrow.get("w");
+    const A_l = arrowXpos;
     const A_y = arrow.get("y");
     const B_y = bubble.get("y");
     // detect if arrow tip is beneath bubble center
     if (A_y > B_y) {
-        const B_x = bubbleXPos;
-        const r = bubbleRad;
-        const dist1 = dist(B_x - A_r, B_y - A_y);
-        const dist2 = dist(B_x - A_l, B_y - A_y);
+        const B_Xpos = bubbleXpos;
+        const r = bubble_rad;
+        const dist1 = dist(B_Xpos - A_r, B_y - A_y);
+        const dist2 = dist(B_Xpos - A_l, B_y - A_y);
         return (dist1 < r) || (dist2 < r);
-    } else { // detect if arrow tip is above bubble center
-        return (B_r > A_l) && (B_l < A_r);
     }
+    // detect if arrow tip is above bubble center
+    return (B_r > A_l) && (B_l < A_r);
 };
 
 // const getArrowsAndBubbles = (arrowList, bubbleList) => {
