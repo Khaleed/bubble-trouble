@@ -30,7 +30,7 @@ window.addEventListener("load", () => {
             return;
         }
         screen.fillStyle = "white"; // eslint-disable-line fp/no-mutation
-        screen.fillRect(arrow.get("x"), arrow.get("y"), arrow.get("w"), arrow.get("yOrigin") - arrow.get("y"));
+        screen.fillRect(arrow.get("x"), arrow.get("y"), arrow.get("w"), canvas.height);
     };
 
     const draw = gameState => {
