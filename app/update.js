@@ -10,10 +10,10 @@ const getNewX = (x, dt, vx) => x + (dt * vx);
 //getNewY :: (Number, Number, Number) -> Number
 const getNewY = (y, dt, newVY) => y + (dt * newVY);
 
-// doReflectX :: (Number, Number, Number) -> Boolean
+// doReflectX :: (Number, Number, Number) -> Bool
 const doReflectX = (newX, radius, canvasWidth) => newX < radius || newX > (canvasWidth - radius);
 
-// doReflectY :: (Number, Number, Number) -> Boolean
+// doReflectY :: (Number, Number, Number) -> Bool
 const doReflectY = (newY, radius, canvasHeight) => newY < radius || newY > (canvasHeight - radius);
 
 // updateBubble :: Map -> Map
@@ -31,7 +31,7 @@ const updateBubble = bubble => {
     }));
 };
 
-// updateArrow :: Map -> MayBe || Map
+// updateArrow :: Map -> MayBe
 const updateArrow = arrow => {
     const step = 10;
     if (arrow === null) {
@@ -42,7 +42,7 @@ const updateArrow = arrow => {
     return newY > 0 ? newArrow : null;
 };
 
-// updatePlayerMovement :: (Obj, Map, Number) -> Number
+// updatePlayerMovement :: ({String: Map}, Map, Number) -> Number
 const updatePlayerMovement = (keys, player, canvasWidth) => {
     const step = 10;
     const playerX = player.get("x");
