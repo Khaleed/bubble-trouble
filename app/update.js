@@ -52,19 +52,17 @@ const updatePlayerMovement = (keys, player, canvasWidth) => {
     return playerX + deltaInMovement;
 };
 
-// isPlayerShooting :: (Obj, List) -> Boolean
+// isPlayerShooting :: ({String: Map}, List) -> Boolean
 const isPlayerShooting = (keys, arrows) => keys.state.get("isSpaceKeyPressed") && arrows.size === 0;
 
-// createArrow :: (Obj, List, Map) -> List
+// createArrow :: ({String: Map}, List, Map) -> List
 const createArrow = (keys, arrows, newArrow) => isPlayerShooting(keys, arrows) ? arrows.push(newArrow) : arrows; // eslint-disable-line fp/no-mutating-methods
 
-// getNewArrows :: (Obj, Map, List, Number) -> List
+// getNewArrows :: ({String: Map}, Map, List, Number) -> List
 const getNewArrows = (keys, player, arrows, canvasHeight) => {
-    const YOrigin = canvasHeight - player.get("h"); // modify to ensure arrows are shot from the floor
     const newArrow = Map({
         x: player.get("x") + (player.get("w") / 2) - 1,
-        y: YOrigin,
-        yOrigin: YOrigin,
+        y: canvasHeight,
         w: 3});
     const arrowList = createArrow(keys, arrows, newArrow);
     return arrowList;
@@ -117,8 +115,8 @@ const isArrowStrikingBubble = (bubble, arrow) => {
 //     }, bubbleList);
 // };
 
-// updateGame :: (Model, Obj, Number, Number, Number ) -> Model
-export const updateGame = (state, keys, canvasWidth, canvasHeight, dt) => { // export canvas height and canvas width
+// updateGame :: (Map, {String: Map}, Number, Number, Number ) -> Map
+export const updateGame = (state, keys, canvasWidth, canvasHeight, dt) => {
     const player = state.get("player");
     const bubble = state.get("bubbleArray");
     const arrows = state.get("arrows");
