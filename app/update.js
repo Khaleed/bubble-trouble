@@ -115,13 +115,13 @@ const isArrowStrikingBubble = (bubble, arrow) => {
 //     }, bubbleList);
 // };
 
-// updateGame :: (Map, {String: Map}, Number, Number, Number ) -> Map
-export const updateGame = (state, keys, canvasWidth, canvasHeight, dt) => {
+// updateGame :: (Map, {String: Map}, {String: HTML}, Number ) -> Map
+export const updateGame = (state, keys, Html, dt) => {
     const player = state.get("player");
     const bubble = state.get("bubbleArray");
     const arrows = state.get("arrows");
-    const playerNewX = updatePlayerMovement(keys, player, canvasWidth);
-    const newArrows = getNewArrows(keys, player, arrows, canvasHeight);
+    const playerNewX = updatePlayerMovement(keys, player, Html.canvas.width);
+    const newArrows = getNewArrows(keys, player, arrows, Html.canvas.height);
     const newGameState = Map({
         bubbleArray: bubble.map(updateBubble),
         player: player.merge({ x: playerNewX }),
