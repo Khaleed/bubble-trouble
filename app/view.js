@@ -21,7 +21,7 @@ window.addEventListener("load", () => {
 
     const drawBubble = bubble => {
         screen.beginPath();
-        screen.arc(bubble.get("x"), bubble.get("y"), bubble.get("radius"), 0, Math.PI*2, false);
+        screen.arc(bubble.get("x"), bubble.get("y"), bubble.get("radius"), 0, Math.PI * 2, false);
         screen.fillStyle = bubble.get("color"); // eslint-disable-line fp/no-mutation
         screen.fill();
         screen.closePath();
@@ -48,9 +48,10 @@ window.addEventListener("load", () => {
         draw(gameState, Html);
         requestAnimationFrame(
             () => runGameRenderingCycle(
-                updateGame(gameState, keys, Html.canvas.width, Html.canvas.height, deltaInTime), time
+                updateGame(gameState, keys, Html.canvas.width, Html.canvas.height, deltaInTime), time, Html
             )
         );
     };
+
     runGameRenderingCycle(Model, 0, Html);
 });
