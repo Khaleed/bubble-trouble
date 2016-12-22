@@ -1,6 +1,6 @@
 import { List, Map } from "immutable";
 import { dist, partial, compose } from "./helpers";
-import { constructBubble } from "./model.js";
+import { constructBubble, standardBubbles } from "./model.js";
 
 // getNewVY :: (Number, Number, Number) -> Number
 const getNewVY = (vy, dt, g) => vy + (g * dt);
@@ -28,7 +28,7 @@ const updateBubble = bubble => {
         x: newX,
         y: newY,
         vx: doReflectX(newX, radius, 1200) ? vX * -1 : vX,
-        vy: doReflectY(newY, radius, 800) ? -500 : newVY
+        vy: doReflectY(newY, radius, 800) ? standardBubbles.get(bubble.get("size")).get("vy_init") : newVY
     }));
 };
 
@@ -82,7 +82,7 @@ const getUpdatedArrows = compose(filterArrows, updateArrows); // investigate ass
 const isArrowStrikingBubble = (bubble, arrow) => {
     const bubbleXpos = bubble.get("x");
     const bubble_rad = bubble.get("radius");
-    const arrowXpos = bubble.get("x");
+    const arrowXpos = arrow.get("x");
     const arrowYpos = arrow.get("y");
     const B_r = bubbleXpos + bubble_rad;
     const B_l = bubbleXpos - bubble_rad;
@@ -103,33 +103,30 @@ const isArrowStrikingBubble = (bubble, arrow) => {
 };
 
 const getNewBubblesAndArrows = (arrowList, bubbleList) => {
-    collision_search:
     for (let i = 0; i < arrowList.size; i++) {
         for (let j = 0; j < bubbleList.size; j++) {
             if (isArrowStrikingBubble(bubbleList.get(j), arrowList.get(i))) {
                 const A2 = arrowList.delete(i);
                 const oldBubble = bubbleList.get(j);
-                const B2 = bubbleList.push(
-                    constructBubble(
-                        oldBubble.get("x") - oldBubble.get("radius"),
-                        oldBubble.get("y"),
-                        false,//moving left
-                        oldBubble.get("color"),
-                        oldBubble.get("size") - 1
-                    ),
-                    constructBubble(// moving right
-                        oldBubble.get("x") + oldBubble.get("radius"),
-                        oldBubble.get("y"),
-                        true,//moving right
-                        oldBubble.get("color"),
-                        oldBubble.get("size") - 1
-                    )
-                );
-                const B3 = B2.delete(j);
-                console.log(`collision detected`);
-                console.log({ arrows: A2, bubbles: B3 });
+                const B2 = bubbleList.delete(j);
+                const B3 = oldBubble.get("size") > 0  ?
+                          B2.push(
+                              constructBubble(
+                                  oldBubble.get("x") - oldBubble.get("radius"),
+                                  oldBubble.get("y"),
+                                  false,//moving left
+                                  oldBubble.get("color"),
+                                  oldBubble.get("size") - 1
+                              ),
+                              constructBubble(// moving right
+                                  oldBubble.get("x") + oldBubble.get("radius"),
+                                  oldBubble.get("y"),
+                                  true,//moving right
+                                  oldBubble.get("color"),
+                                  oldBubble.get("size") - 1
+                              )
+                          ) : B2; // B2 -> list of bubbles with the bubble that was hit removed
                 return { arrows: A2, bubbles: B3 };
-                break collision_search;
             }
         }
     }
