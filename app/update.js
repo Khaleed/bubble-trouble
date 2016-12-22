@@ -1,5 +1,6 @@
 import { List, Map } from "immutable";
 import { dist, partial, compose } from "./helpers";
+import { constructBubble } from "./model.js";
 
 // getNewVY :: (Number, Number, Number) -> Number
 const getNewVY = (vy, dt, g) => vy + (g * dt);
@@ -75,7 +76,7 @@ const filterArrows = ary => ary.filter(x => x !== null);
 const updateArrows = ary => ary.map(updateArrow);
 
 // getUpdatedArrows :: List -> List
-const getUpdatedArrows = compose(updateArrows, filterArrows);
+const getUpdatedArrows = compose(filterArrows, updateArrows); // investigate associativity of compose
 
 // isArrowStrikingBubble :: (Map, Map) -> bool
 const isArrowStrikingBubble = (bubble, arrow) => {
@@ -101,31 +102,52 @@ const isArrowStrikingBubble = (bubble, arrow) => {
     return (B_r > A_l) && (B_l < A_r);
 };
 
-// const getArrowsAndBubbles = (arrowList, bubbleList) => {
-//     arrowList.reduce((blist, arrow) => {
-//         // see if the arrow collides with any bubbles in bubble list
-//         blist.reduce((newBlist, bubble) => {
-//             if (isArrowStrikingBubble(bubble, arrow)) {
-//                 // add 2 new bubbles to new bubble list
-//             } else {
-//                 // add original bubble into new bubble list
-//                 newBlist.push(bubble);
-//             }
-//         }, List.of());
-//     }, bubbleList);
-// };
+const getNewBubblesAndArrows = (arrowList, bubbleList) => {
+    collision_search:
+    for (let i = 0; i < arrowList.size; i++) {
+        for (let j = 0; j < bubbleList.size; j++) {
+            if (isArrowStrikingBubble(bubbleList.get(j), arrowList.get(i))) {
+                const A2 = arrowList.delete(i);
+                const oldBubble = bubbleList.get(j);
+                const B2 = bubbleList.push(
+                    constructBubble(
+                        oldBubble.get("x") - oldBubble.get("radius"),
+                        oldBubble.get("y"),
+                        false,//moving left
+                        oldBubble.get("color"),
+                        oldBubble.get("size") - 1
+                    ),
+                    constructBubble(// moving right
+                        oldBubble.get("x") + oldBubble.get("radius"),
+                        oldBubble.get("y"),
+                        true,//moving right
+                        oldBubble.get("color"),
+                        oldBubble.get("size") - 1
+                    )
+                );
+                const B3 = B2.delete(j);
+                console.log(`collision detected`);
+                console.log({ arrows: A2, bubbles: B3 });
+                return { arrows: A2, bubbles: B3 };
+                break collision_search;
+            }
+        }
+    }
+    return { arrows: arrowList, bubbles: bubbleList };
+};
 
-// updateGame :: (Map, {String: Map}, {String: HTML}, Number ) -> Map
+// updateGame :: Map: any, {String: Map}, {String: HTML}, Number ) -> Map: any
 export const updateGame = (state, keys, Html, dt) => {
     const player = state.get("player");
     const bubble = state.get("bubbleArray");
     const arrows = state.get("arrows");
-    const playerNewX = updatePlayerMovement(keys, player, Html.canvas.width);
+    const playerNewXPos = updatePlayerMovement(keys, player, Html.canvas.width);
     const newArrows = getNewArrows(keys, player, arrows, Html.canvas.height);
+    const tuple = getNewBubblesAndArrows(getUpdatedArrows(newArrows), bubble.map(updateBubble));
     const newGameState = Map({
-        bubbleArray: bubble.map(updateBubble),
-        player: player.merge({ x: playerNewX }),
-        arrows: getUpdatedArrows(newArrows)
+        bubbleArray: tuple.bubbles,
+        player: player.merge({ x: playerNewXPos }),
+        arrows: tuple.arrows
     });
     return newGameState;
 };
