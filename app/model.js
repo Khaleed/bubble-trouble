@@ -34,22 +34,22 @@ const Model = Map({
 const standardBubbles = List.of(
     Map({
         // size === 0
-        vy_init: 200,
+        vy_init: -200,
         radius: 10
     }),
     Map({
         // size === 1
-        vy_init: 250,
+        vy_init: -300,
         radius: 20
     }),
     Map({
         // size === 2
-        vy_init: 300,
+        vy_init: -400,
         radius: 30
     }),
     Map({
         // size === 3
-        vy_init: 350,
+        vy_init: -550,
         radius: 45
     })
 );
@@ -67,4 +67,4 @@ const constructBubble = (x, y, direction_right, color, size) => Map({
     size: size
 });
 
-export { Model, constructBubble };
+export { Model, constructBubble, standardBubbles };
