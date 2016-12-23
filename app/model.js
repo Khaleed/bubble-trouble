@@ -25,6 +25,7 @@ const Model = Map({
         x: canvas.width/2,
         w: 20,
         h: 40,
+        y: canvas.height - 40,
         color: "blue"
     }),
     arrows: List.of()
