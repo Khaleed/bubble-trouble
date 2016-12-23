@@ -79,33 +79,44 @@ const updateArrows = ary => ary.map(updateArrow);
 const getUpdatedArrows = compose(filterArrows, updateArrows); // investigate associativity of compose
 
 // isArrowStrikingBubble :: (Map, Map) -> bool
-const isArrowStrikingBubble = (bubble, arrow) => {
+const isRectStrikingBubble = (bubble, rect) => {
     const bubbleXpos = bubble.get("x");
     const bubble_rad = bubble.get("radius");
-    const arrowXpos = arrow.get("x");
-    const arrowYpos = arrow.get("y");
+    const rectXpos = rect.get("x");
+    const rectYpos = rect.get("y");
     const B_r = bubbleXpos + bubble_rad;
     const B_l = bubbleXpos - bubble_rad;
-    const A_r = arrowXpos + arrow.get("w");
-    const A_l = arrowXpos;
-    const A_y = arrow.get("y");
+    const Rect_r = rectXpos + rect.get("w");
+    const Rect_l = rectXpos;
+    const Rect_y = rect.get("y");
     const B_y = bubble.get("y");
-    // detect if arrow tip is beneath bubble center
-    if (A_y > B_y) {
+    // detect if rect tip is beneath bubble center
+    if (Rect_y > B_y) {
         const B_Xpos = bubbleXpos;
         const r = bubble_rad;
-        const dist1 = dist(B_Xpos - A_r, B_y - A_y);
-        const dist2 = dist(B_Xpos - A_l, B_y - A_y);
+        const dist1 = dist(B_Xpos - Rect_r, B_y - Rect_y);
+        const dist2 = dist(B_Xpos - Rect_l, B_y - Rect_y);
         return (dist1 < r) || (dist2 < r);
     }
-    // detect if arrow tip is above bubble center
-    return (B_r > A_l) && (B_l < A_r);
+    // detect if rect tip is above bubble center
+    return (B_r > Rect_l) && (B_l < Rect_r);
 };
 
+// isPlayerHit :: (List, Map) => String
+const isPlayerHit = (bubbles, player) => {
+    for (let i = 0; i < bubbles.size; i += 1) {
+        if (isRectStrikingBubble(bubbles.get(i), player)) {
+            return true;
+        }
+    }
+    return false;
+};
+
+// replace for loop with map
 const getNewBubblesAndArrows = (arrowList, bubbleList) => {
     for (let i = 0; i < arrowList.size; i++) {
         for (let j = 0; j < bubbleList.size; j++) {
-            if (isArrowStrikingBubble(bubbleList.get(j), arrowList.get(i))) {
+            if (isRectStrikingBubble(bubbleList.get(j), arrowList.get(i))) {
                 const A2 = arrowList.delete(i);
                 const oldBubble = bubbleList.get(j);
                 const B2 = bubbleList.delete(j);
@@ -116,7 +127,7 @@ const getNewBubblesAndArrows = (arrowList, bubbleList) => {
                                   oldBubble.get("y"),
                                   false,//moving left
                                   oldBubble.get("color"),
-                                  oldBubble.get("size") - 1
+                                  oldBubble.get("size") - 1 // construct smaller bubble
                               ),
                               constructBubble(// moving right
                                   oldBubble.get("x") + oldBubble.get("radius"),
@@ -141,10 +152,14 @@ export const updateGame = (state, keys, Html, dt) => {
     const playerNewXPos = updatePlayerMovement(keys, player, Html.canvas.width);
     const newArrows = getNewArrows(keys, player, arrows, Html.canvas.height);
     const tuple = getNewBubblesAndArrows(getUpdatedArrows(newArrows), bubble.map(updateBubble));
+    const newPlayer = player.merge({x: playerNewXPos});
     const newGameState = Map({
         bubbleArray: tuple.bubbles,
-        player: player.merge({ x: playerNewXPos }),
+        player: newPlayer,
         arrows: tuple.arrows
     });
-    return newGameState;
+    if (!isPlayerHit(tuple.bubbles, newPlayer)) {
+        return newGameState;
+    }
+    return state;
 };
