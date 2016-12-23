@@ -19,3 +19,37 @@ body, canvas {
 #player, #bubble {
     display: none;
 }
+
+.game-note{
+    border: 4px solid grey;
+    position: absolute;
+    right: 10px;
+    font-size: 150%;
+    text-align: center;
+    font-family: Sans-Serif;
+}
+
+.title{
+    background: grey;
+    color: white;
+    padding: 5px;
+}
+
+.value{
+    padding:8px;
+    font-size: 150%;
+}
+
+
+
+#score-container{
+    top:30px;
+}
+
+#life-container{
+    top:160px;
+}
+
+#level-container{
+    top:290px;
+}
