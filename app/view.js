@@ -8,11 +8,8 @@ import { Model } from "./model";
 interrogateKeyState(keys);
 
 window.addEventListener("load", () => {
-    const canvas = Html.canvas;
-    const screen = canvas.getContext("2d");
 
-    canvas.width = 1200; // eslint-disable-line fp/no-mutation
-    canvas.height = 800; // eslint-disable-line fp/no-mutation
+    const screen = Html.canvas.getContext("2d");
 
     const drawPlayer = player => {
         screen.fillStyle = player.get("color"); // eslint-disable-line fp/no-mutation
