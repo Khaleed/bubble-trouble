@@ -4,7 +4,7 @@ import { List, Map } from "immutable";
 const canvas = Html.canvas;
 
 const Model = Map({
-    bubbleArray: List.of(Map({
+    bubbles: List.of(Map({
         x: canvas.width/2,
         y: canvas.height/2,
         vx: 100,

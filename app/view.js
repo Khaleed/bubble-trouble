@@ -34,7 +34,7 @@ window.addEventListener("load", () => {
 
     const draw = (gameState, Html) => {
         screen.clearRect(0, 0, Html.canvas.width, Html.canvas.height);
-        gameState.get("bubbleArray").map(drawBubble);
+        gameState.get("bubbles").map(drawBubble);
         gameState.get("arrows").map(drawArrow);
         drawPlayer(gameState.get("player"));
     };

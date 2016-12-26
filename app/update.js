@@ -147,14 +147,14 @@ const getNewBubblesAndArrows = (arrowList, bubbleList) => {
 // updateGame :: Map: any, {String: Map}, {String: HTML}, Number ) -> Map: any
 export const updateGame = (state, keys, Html, dt) => {
     const player = state.get("player");
-    const bubble = state.get("bubbleArray");
+    const bubble = state.get("bubbles");
     const arrows = state.get("arrows");
     const playerNewXPos = updatePlayerMovement(keys, player, Html.canvas.width);
     const newArrows = getNewArrows(keys, player, arrows, Html.canvas.height);
     const tuple = getNewBubblesAndArrows(getUpdatedArrows(newArrows), bubble.map(updateBubble));
     const newPlayer = player.merge({x: playerNewXPos});
     const newGameState = Map({
-        bubbleArray: tuple.bubbles,
+        bubbles: tuple.bubbles,
         player: newPlayer,
         arrows: tuple.arrows
     });
