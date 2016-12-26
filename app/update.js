@@ -1,6 +1,6 @@
 import { List, Map } from "immutable";
 import { dist, partial, compose } from "./helpers";
-import { constructBubble, standardBubbles } from "./model.js";
+import { standardBubbles } from "./model.js";
 
 // getNewVY :: (Number, Number, Number) -> Number
 const getNewVY = (vy, dt, g) => vy + (g * dt);
@@ -111,6 +111,17 @@ const isPlayerHit = (bubbles, player) => {
     }
     return false;
 };
+
+// helper function to create bubbles
+const constructBubble = (x, y, direction_right, color, size) => Map({
+    x: x,
+    y: y,
+    vx: direction_right ? 100 : -100,
+    vy: standardBubbles.get(size).get("vy_init"),
+    color: color,
+    radius: standardBubbles.get(size).get("radius"),
+    size: size
+});
 
 // replace for loop with map
 const getNewBubblesAndArrows = (arrowList, bubbleList) => {

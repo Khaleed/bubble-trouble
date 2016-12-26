@@ -31,7 +31,6 @@ const Model = Map({
     arrows: List.of()
 });
 
-// default data
 const standardBubbles = List.of(
     Map({
         // size === 0
@@ -55,17 +54,4 @@ const standardBubbles = List.of(
     })
 );
 
-const standard_vx = 100;
-
-//construct bubble
-const constructBubble = (x, y, direction_right, color, size) => Map({
-    x: x,
-    y: y,
-    vx: direction_right ? standard_vx : -standard_vx,
-    vy: standardBubbles.get(size).get("vy_init"),
-    color: color,
-    radius: standardBubbles.get(size).get("radius"),
-    size: size
-});
-
-export { Model, constructBubble, standardBubbles };
+export { Model, standardBubbles };
