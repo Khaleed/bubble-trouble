@@ -92,11 +92,9 @@ const isRectStrikingBubble = (bubble, rect) => {
     const bubbleYPos = bubble.get("y");
     // detect if rect tip is beneath bubble center
     if (rectYPos > bubbleYPos) {
-        const B_Xpos = bubbleXpos;
-        const r = bubble_radius;
-        const dist1 = dist(B_Xpos - rightRect, bubbleYPos - rectYPos);
-        const dist2 = dist(B_Xpos - leftRect, bubbleYPos - rectYPos);
-        return (dist1 < r) || (dist2 < r);
+        const dist1 = dist(bubbleXpos - rightRect, bubbleYPos - rectYPos);
+        const dist2 = dist(bubbleXpos - leftRect, bubbleYPos - rectYPos);
+        return (dist1 < bubble_radius) || (dist2 < bubble_radius);
     }
     // detect if rect tip is above bubble center
     return (rightBubble > leftRect) && (leftBubble < rightRect);
@@ -141,11 +139,11 @@ const getNewBubblesAndArrows = (arrowList, bubbleList) => {
                                   oldBubble.get("size") - 1
                               )
                           ) : B2; // B2 -> list of bubbles with the bubble that was hit removed
-                return { arrows: A2, bubbles: B3 };
+                return Map({ arrows: A2, bubbles: B3 });
             }
         }
     }
-    return { arrows: arrowList, bubbles: bubbleList };
+    return Map({ arrows: arrowList, bubbles: bubbleList });
 };
 
 // updateGame :: Map: any, {String: Map}, {String: HTML}, Number ) -> Map: any
@@ -158,11 +156,11 @@ export const updateGame = (state, keys, Html, dt) => {
     const tuple = getNewBubblesAndArrows(getUpdatedArrows(newArrows), bubble.map(updateBubble));
     const newPlayer = player.merge({x: playerNewXPos});
     const newGameState = Map({
-        bubbles: tuple.bubbles,
+        bubbles: tuple.get("bubbles"),
         player: newPlayer,
-        arrows: tuple.arrows
+        arrows: tuple.get("arrows")
     });
-    if (!isPlayerHit(tuple.bubbles, newPlayer)) {
+    if (!isPlayerHit(tuple.get("bubbles"), newPlayer)) {
         return newGameState;
     }
     return state;
