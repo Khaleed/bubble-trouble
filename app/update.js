@@ -104,7 +104,7 @@ const isRectStrikingBubble = (bubble, rect) => {
 const isPlayerHit = (bubbles, player) => bubbles.reduce((acc, x) => acc || isRectStrikingBubble(x, player) ? true: false, false);
 
 // helper function to create bubbles
-const constructBubble = (x, y, direction_right, color, size) => Map({
+const makeSmallerBubble = (x, y, direction_right, color, size) => Map({
     x: x,
     y: y,
     vx: direction_right ? 100 : -100,
@@ -115,23 +115,23 @@ const constructBubble = (x, y, direction_right, color, size) => Map({
 });
 
 // replace for loop with map
-const getNewBubblesAndArrows = (arrowList, bubbleList) => {
-    for (let i = 0; i < arrowList.size; i++) {
-        for (let j = 0; j < bubbleList.size; j++) {
-            if (isRectStrikingBubble(bubbleList.get(j), arrowList.get(i))) {
-                const newArrows = arrowList.delete(i);
-                const newBubbles1 = bubbleList.delete(j);
-                const oldBubble = bubbleList.get(j);
+const getNewBubblesAndArrows = (arrows, bubbles) => {
+    for (let i = 0; i < arrows.size; i += 1) {
+        for (let j = 0; j < bubbles.size; j += 1) {
+            if (isRectStrikingBubble(bubbles.get(j), arrows.get(i))) {
+                const newArrows = arrows.delete(i);
+                const newBubbles1 = bubbles.delete(j);
+                const oldBubble = bubbles.get(j);
                 const newBubbles2 = oldBubble.get("size") > 0  ?
                           newBubbles1.push(
-                              constructBubble(
+                              makeSmallerBubble(
                                   oldBubble.get("x") - oldBubble.get("radius"),
                                   oldBubble.get("y"),
                                   false,//moving left
                                   oldBubble.get("color"),
                                   oldBubble.get("size") - 1 // construct smaller bubble
                               ),
-                              constructBubble(// moving right
+                              makeSmallerBubble(// moving right
                                   oldBubble.get("x") + oldBubble.get("radius"),
                                   oldBubble.get("y"),
                                   true,//moving right
@@ -143,7 +143,7 @@ const getNewBubblesAndArrows = (arrowList, bubbleList) => {
             }
         }
     }
-    return Map({ arrows: arrowList, bubbles: bubbleList });
+    return Map({ arrows: arrows, bubbles: bubbles });
 };
 
 // updateGame :: Map: any, {String: Map}, {String: HTML}, Number ) -> Map: any
