@@ -81,45 +81,38 @@ const getUpdatedArrows = compose(filterArrows, updateArrows); // investigate ass
 // isArrowStrikingBubble :: (Map, Map) -> bool
 const isRectStrikingBubble = (bubble, rect) => {
     const bubbleXpos = bubble.get("x");
-    const bubble_rad = bubble.get("radius");
+    const bubble_radius = bubble.get("radius");
     const rectXpos = rect.get("x");
     const rectYpos = rect.get("y");
-    const B_r = bubbleXpos + bubble_rad;
-    const B_l = bubbleXpos - bubble_rad;
-    const Rect_r = rectXpos + rect.get("w");
-    const Rect_l = rectXpos;
-    const Rect_y = rect.get("y");
-    const B_y = bubble.get("y");
+    const rightBubble = bubbleXpos + bubble_radius;
+    const leftBubble = bubbleXpos - bubble_radius;
+    const rightRect = rectXpos + rect.get("w");
+    const leftRect = rectXpos;
+    const rectYPos = rect.get("y");
+    const bubbleYPos = bubble.get("y");
     // detect if rect tip is beneath bubble center
-    if (Rect_y > B_y) {
+    if (rectYPos > bubbleYPos) {
         const B_Xpos = bubbleXpos;
-        const r = bubble_rad;
-        const dist1 = dist(B_Xpos - Rect_r, B_y - Rect_y);
-        const dist2 = dist(B_Xpos - Rect_l, B_y - Rect_y);
+        const r = bubble_radius;
+        const dist1 = dist(B_Xpos - rightRect, bubbleYPos - rectYPos);
+        const dist2 = dist(B_Xpos - leftRect, bubbleYPos - rectYPos);
         return (dist1 < r) || (dist2 < r);
     }
     // detect if rect tip is above bubble center
-    return (B_r > Rect_l) && (B_l < Rect_r);
+    return (rightBubble > leftRect) && (leftBubble < rightRect);
 };
 
-// isPlayerHit :: (List, Map) => String
-const isPlayerHit = (bubbles, player) => {
-    for (let i = 0; i < bubbles.size; i += 1) {
-        if (isRectStrikingBubble(bubbles.get(i), player)) {
-            return true;
-        }
-    }
-    return false;
-};
+// isPlayerHit :: (List, Map) -> Bool
+const isPlayerHit = (bubbles, player) => bubbles.reduce((acc, x) => acc || isRectStrikingBubble(x, player) ? true: false, false);
 
 // helper function to create bubbles
 const constructBubble = (x, y, direction_right, color, size) => Map({
     x: x,
     y: y,
     vx: direction_right ? 100 : -100,
-    vy: standardBubbles.get(size).get("vy_init"),
+    vy: standardBubbles.get(size).get("vy_init"), // side-effect 1
     color: color,
-    radius: standardBubbles.get(size).get("radius"),
+    radius: standardBubbles.get(size).get("radius"), // side-effect 2
     size: size
 });
 
