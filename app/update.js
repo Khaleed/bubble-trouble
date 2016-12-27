@@ -119,11 +119,11 @@ const getNewBubblesAndArrows = (arrowList, bubbleList) => {
     for (let i = 0; i < arrowList.size; i++) {
         for (let j = 0; j < bubbleList.size; j++) {
             if (isRectStrikingBubble(bubbleList.get(j), arrowList.get(i))) {
-                const A2 = arrowList.delete(i);
+                const newArrows = arrowList.delete(i);
+                const newBubbles1 = bubbleList.delete(j);
                 const oldBubble = bubbleList.get(j);
-                const B2 = bubbleList.delete(j);
-                const B3 = oldBubble.get("size") > 0  ?
-                          B2.push(
+                const newBubbles2 = oldBubble.get("size") > 0  ?
+                          newBubbles1.push(
                               constructBubble(
                                   oldBubble.get("x") - oldBubble.get("radius"),
                                   oldBubble.get("y"),
@@ -138,8 +138,8 @@ const getNewBubblesAndArrows = (arrowList, bubbleList) => {
                                   oldBubble.get("color"),
                                   oldBubble.get("size") - 1
                               )
-                          ) : B2; // B2 -> list of bubbles with the bubble that was hit removed
-                return Map({ arrows: A2, bubbles: B3 });
+                          ) : newBubbles1; // B2 -> list of bubbles with the bubble that was hit removed
+                return Map({ arrows: newArrows, bubbles: newBubbles2 });
             }
         }
     }
