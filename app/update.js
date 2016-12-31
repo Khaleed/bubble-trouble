@@ -1,6 +1,6 @@
 import { List, Map } from "immutable";
-import { dist, partial, compose } from "./helpers";
-import { standardBubbles } from "./model.js";
+import { dist, partial, curry, compose } from "./helpers";
+import { Model } from "./model";
 
 // getNewVY :: (Number, Number, Number) -> Number
 const getNewVY = (vy, dt, g) => vy + (g * dt);
