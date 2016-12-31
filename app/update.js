@@ -21,14 +21,16 @@ const doReflectY = (newY, radius, canvasHeight) => newY < radius || newY > (canv
 const updateBubble = bubble => {
     const vX = bubble.get("vx");
     const radius = bubble.get("radius");
-    const newVY = getNewVY(bubble.get("vy"), 0.02, 200);
-    const newX = getNewX(bubble.get("x"), 0.02, bubble.get("vx"));
-    const newY = getNewY(bubble.get("y"), 0.02, newVY);
+    const dt = 0.02; // future -> use delta in time between requestAnimationFrame
+    const g = 200;
+    const newVY = getNewVY(bubble.get("vy"), dt, g);
+    const newX = getNewX(bubble.get("x"), dt, bubble.get("vx"));
+    const newY = getNewY(bubble.get("y"), dt, newVY);
     return bubble.merge(Map({
         x: newX,
         y: newY,
-        vx: doReflectX(newX, radius, 1200) ? vX * -1 : vX,
-        vy: doReflectY(newY, radius, 800) ? standardBubbles.get(bubble.get("size")).get("vy_init") : newVY
+        vx: doReflectX(newX, radius, 800) ? vX * -1 : vX,
+        vy: doReflectY(newY, radius, 600) ? Model.get("standardBubbles").get(bubble.get("size")).get("vy_init") : newVY // Side-effects -> Html && standardBubbles
     }));
 };
 
