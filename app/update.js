@@ -105,19 +105,23 @@ const isRectStrikingBubble = (bubble, rect) => {
 // isPlayerHit :: (List, Map) -> Bool
 const isPlayerHit = (bubbles, player) => bubbles.reduce((acc, x) => acc || isRectStrikingBubble(x, player) ? true: false, false);
 
-// helper function to create bubbles
-const makeSmallerBubble = (x, y, direction_right, color, size) => Map({
-    x: x,
-    y: y,
-    vx: direction_right ? 100 : -100,
-    vy: standardBubbles.get(size).get("vy_init"), // side-effect 1
-    color: color,
-    radius: standardBubbles.get(size).get("radius"), // side-effect 2
-    size: size
-});
+// makeSmallerBubble :: (Number, Map, Bool, List) -> Map
+const makeSmallerBubble = (x, bubble, dir_right, standardBubbles) => {
+    const step = 100;
+    const size = bubble.get("size");
+    return Map({
+        x: x, // depends if a right or left-sided bubble
+        y: bubble.get("y"),
+        vx: dir_right ? step : -step,
+        vy: standardBubbles.get(size).get("vy_init"),
+        color: bubble.get("color"),
+        radius: standardBubbles.get(size).get("radius"),
+        size: size - 1
+    });
+};
 
-// replace for loop with map
-const getNewBubblesAndArrows = (arrows, bubbles) => {
+// getNewArrowsAndBubbles :: (List, List, List) -> Map
+const getNewBubblesAndArrows = (arrows, bubbles, standardBubbles) => {
     for (let i = 0; i < arrows.size; i += 1) {
         for (let j = 0; j < bubbles.size; j += 1) {
             if (isRectStrikingBubble(bubbles.get(j), arrows.get(i))) {
@@ -128,19 +132,17 @@ const getNewBubblesAndArrows = (arrows, bubbles) => {
                           newBubbles1.push(
                               makeSmallerBubble(
                                   oldBubble.get("x") - oldBubble.get("radius"),
-                                  oldBubble.get("y"),
+                                  oldBubble,
                                   false,//moving left
-                                  oldBubble.get("color"),
-                                  oldBubble.get("size") - 1 // construct smaller bubble
+                                  standardBubbles
                               ),
                               makeSmallerBubble(// moving right
                                   oldBubble.get("x") + oldBubble.get("radius"),
-                                  oldBubble.get("y"),
-                                  true,//moving right
-                                  oldBubble.get("color"),
-                                  oldBubble.get("size") - 1
+                                  oldBubble,
+                                  true, //moving right
+                                  standardBubbles
                               )
-                          ) : newBubbles1; // B2 -> list of bubbles with the bubble that was hit removed
+                          ) : newBubbles1;
                 return Map({ arrows: newArrows, bubbles: newBubbles2 });
             }
         }
@@ -148,14 +150,15 @@ const getNewBubblesAndArrows = (arrows, bubbles) => {
     return Map({ arrows: arrows, bubbles: bubbles });
 };
 
-// updateGame :: Map: any, {String: Map}, {String: HTML}, Number ) -> Map: any
+// updateGame :: (Map, {String: Map}, {String: HTML}, Number) -> Map
 export const updateGame = (state, keys, Html, dt) => {
     const player = state.get("player");
     const bubble = state.get("bubbles");
     const arrows = state.get("arrows");
+    const standardBubbles = state.get("standardBubbles");
     const playerNewXPos = updatePlayerMovement(keys, player, Html.canvas.width);
     const newArrows = getNewArrows(keys, player, arrows, Html.canvas.height);
-    const tuple = getNewBubblesAndArrows(getUpdatedArrows(newArrows), bubble.map(updateBubble));
+    const tuple = getNewBubblesAndArrows(getUpdatedArrows(newArrows), bubble.map(updateBubble), standardBubbles);
     const newPlayer = player.merge({x: playerNewXPos});
     const newGameState = Map({
         bubbles: tuple.get("bubbles"),
