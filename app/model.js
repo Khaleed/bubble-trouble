@@ -21,28 +21,6 @@ const Model = Map({
         radius: 25,
         size: 2
     })),
-    standardBubbles: List.of(
-        Map({
-            // size === 0
-            vy_init: -200,
-            radius: 10
-        }),
-        Map({
-            // size === 1
-            vy_init: -300,
-            radius: 20
-        }),
-        Map({
-            // size === 2
-            vy_init: -400,
-            radius: 30
-        }),
-        Map({
-            // size === 3
-            vy_init: -550,
-            radius: 45
-        })
-    ),
     player: Map({
         x: canvas.width/2,
         w: 20,
@@ -53,4 +31,27 @@ const Model = Map({
     arrows: List.of()
 });
 
-export { Model };
+const standardBubbles = List.of(
+    Map({
+        // size === 0
+        vy_init: -200,
+        radius: 10
+    }),
+    Map({
+        // size === 1
+        vy_init: -300,
+        radius: 20
+    }),
+    Map({
+        // size === 2
+        vy_init: -400,
+        radius: 30
+    }),
+    Map({
+        // size === 3
+        vy_init: -550,
+        radius: 45
+    })
+);
+
+export { Model, standardBubbles };
