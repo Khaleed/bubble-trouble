@@ -20,17 +20,20 @@ const doReflectY = (newY, radius, canvasHeight) => newY < radius || newY > (canv
 // updateBubble :: Map -> Map
 const updateBubble = bubble => {
     const vX = bubble.get("vx");
+    const vY = standardBubbles.get(bubble.get("size")).get("vy_init");
     const radius = bubble.get("radius");
     const dt = 0.02; // future -> use delta in time between requestAnimationFrame
     const g = 200;
     const newVY = getNewVY(bubble.get("vy"), dt, g);
-    const newX = getNewX(bubble.get("x"), dt, bubble.get("vx"));
+    const newX = getNewX(bubble.get("x"), dt, vX);
     const newY = getNewY(bubble.get("y"), dt, newVY);
+    const isXreflecting = doReflectX(newX, radius, 800);
+    const isYreflecting = doReflectY(newY, radius, 600);
     return bubble.merge(Map({
         x: newX,
         y: newY,
-        vx: doReflectX(newX, radius, 800) ? vX * -1 : vX,
-        vy: doReflectY(newY, radius, 600) ? Model.get("standardBubbles").get(bubble.get("size")).get("vy_init") : newVY // Side-effects -> Html && standardBubbles
+        vx: isXreflecting ? vX * -1 : vX,
+        vy: isYreflecting ? vY : newVY // Side-effects -> Html && standardBubbles
     }));
 };
 
@@ -55,20 +58,19 @@ const updatePlayerMovement = (keys, player, canvasWidth) => {
     return playerX + deltaInMovement;
 };
 
-// isPlayerShooting :: ({String: Map}, List) -> Boolean
+// isPlayerShooting :: ({String: Map}, List) -> Bool
 const isPlayerShooting = (keys, arrows) => keys.state.get("isSpaceKeyPressed") && arrows.size === 0;
 
 // createArrow :: ({String: Map}, List, Map) -> List
-const createArrow = (keys, arrows, newArrow) => isPlayerShooting(keys, arrows) ? arrows.push(newArrow) : arrows; // eslint-disable-line fp/no-mutating-methods
+const createArrows = (keys, arrows, newArrow) => isPlayerShooting(keys, arrows) ? arrows.push(newArrow) : arrows; // eslint-disable-line fp/no-mutating-methods
 
 // getNewArrows :: ({String: Map}, Map, List, Number) -> List
-const getNewArrows = (keys, player, arrows, canvasHeight) => {
+const getArrows = (keys, player, arrows, canvasHeight) => {
     const newArrow = Map({
         x: player.get("x") + (player.get("w") / 2) - 1,
         y: canvasHeight,
         w: 3});
-    const arrowList = createArrow(keys, arrows, newArrow);
-    return arrowList;
+    return createArrows(keys, arrows, newArrow);
 };
 
 // filterArrows :: List -> List
@@ -80,7 +82,7 @@ const updateArrows = ary => ary.map(updateArrow);
 // getUpdatedArrows :: List -> List
 const getUpdatedArrows = compose(filterArrows, updateArrows); // investigate associativity of compose
 
-// isArrowStrikingBubble :: (Map, Map) -> bool
+// isArrowStrikingBubble :: (Map, Map) -> Bool
 const isRectStrikingBubble = (bubble, rect) => {
     const bubbleXpos = bubble.get("x");
     const bubble_radius = bubble.get("radius");
