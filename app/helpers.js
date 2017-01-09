@@ -14,4 +14,10 @@ const partial = (f, ...init) => (...args) => fn(...init, ...args); // eslint-dis
 
 const compose = (...fs) => fs.reduce((f, g) => (...args) => f(g(...args))); // eslint-disable-line fp/no-rest-parameters
 
-export { dist, partial, curry, compose };
+
+const callFirst = (fn, larg) =>
+          function(...rest) {
+              return fn.call(this, larg, ...rest);
+          };
+
+export { dist, partial, curry, compose, callFirst };
