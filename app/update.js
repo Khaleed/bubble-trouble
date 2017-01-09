@@ -18,7 +18,7 @@ const doReflectX = (newX, radius, canvasWidth) => newX < radius || newX > (canva
 const doReflectY = (newY, radius, canvasHeight) => newY < radius || newY > (canvasHeight - radius);
 
 // updateBubble :: Map -> Map
-const updateBubble = bubble => {
+const updateBubble = (bubble, standardBubbles) => {
     const vX = bubble.get("vx");
     const vY = standardBubbles.get(bubble.get("size")).get("vy_init");
     const radius = bubble.get("radius");
@@ -33,7 +33,7 @@ const updateBubble = bubble => {
         x: newX,
         y: newY,
         vx: isXreflecting ? vX * -1 : vX,
-        vy: isYreflecting ? vY : newVY // Side-effects -> Html && standardBubbles
+        vy: isYreflecting ? vY : newVY // Side-effects -> standardBubbles
     }));
 };
 
@@ -158,6 +158,7 @@ export const updateGame = (state, keys, Html, dt) => {
     const player = state.get("player");
     const bubble = state.get("bubbles");
     const arrows = state.get("arrows");
+    const standardBubbles = state.get("standardBubbles");
     const playerNewXPos = updatePlayerMovement(keys, player, Html.canvas.width);
     const newArrows = getArrows(keys, player, arrows, Html.canvas.height);
     const tuple = getNewBubblesAndArrows(getUpdatedArrows(newArrows), bubble.map(updateBubble));
@@ -170,5 +171,5 @@ export const updateGame = (state, keys, Html, dt) => {
     if (!isPlayerHit(tuple.get("bubbles"), newPlayer)) {
         return newGameState;
     }
-    return state;
+    return state; // game over
 };
