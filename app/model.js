@@ -1,6 +1,7 @@
 import { List, Map } from "immutable";
 import { callFirst } from "./helpers";
 
+// createBubble :: (Canvas, Number, Number, String, Number, Number) => Map
 const createBubble = (canvas, vx, vy, color, radius=25, size=2) => {
     return Map({
         x: canvas.width/2,
@@ -13,11 +14,12 @@ const createBubble = (canvas, vx, vy, color, radius=25, size=2) => {
     });
 };
 
-// const createModel = canvas => {
-//     // return Model based on canvas
-//     // use createBubble -> canvas
-// };
+const createModel = canvas => {
+    // return Model based on canvas
+    // use createBubble -> canvas
+};
 
+// createBubbleInCanvas :: (Function, Canvas) -> Bubble
 const createBubbleInCanvas = callFirst(createBubble, canvas);
 
 const Model = Map({
