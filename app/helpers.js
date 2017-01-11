@@ -1,3 +1,16 @@
+// createBubble :: (Canvas, Number, Number, String, Number, Number) => Map
+const createBubble = (x, y, vx, vy, color, radius=25, size=2) => {
+    return Map({
+        x: x,
+        y: y,
+        vx: vx,
+        vy: vy,
+        color: color,
+        radius: radius,
+        size: size
+    });
+};
+
 const dist = (x, y) => Math.hypot(x, y);
 
 const curry = (fn) => {
@@ -14,10 +27,4 @@ const partial = (f, ...init) => (...args) => fn(...init, ...args); // eslint-dis
 
 const compose = (...fs) => fs.reduce((f, g) => (...args) => f(g(...args))); // eslint-disable-line fp/no-rest-parameters
 
-
-const callFirst = (fn, larg) =>
-          function(...rest) {
-              return fn.call(this, larg, ...rest);
-          };
-
-export { dist, partial, curry, compose, callFirst };
+export { createBubble, dist, partial, curry, compose };
