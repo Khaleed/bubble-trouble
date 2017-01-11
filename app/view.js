@@ -3,7 +3,7 @@ import { default as Html } from "./html";
 import { interrogateKeyState, keys } from "./keystate";
 import { List, Map } from "immutable";
 import { updateGame } from "./update";
-import { Model } from "./model";
+import { newModel } from "./model";
 
 interrogateKeyState(keys);
 
@@ -50,5 +50,5 @@ window.addEventListener("load", () => {
         );
     };
 
-    runGameRenderingCycle(Model, 0, Html);
+    runGameRenderingCycle(newModel(Html.canvas), 0, Html);
 });
