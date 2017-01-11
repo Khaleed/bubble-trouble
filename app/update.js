@@ -166,15 +166,16 @@ export const updateGame = (state, keys, Html, dt) => {
     const standardBubbles = state.get("standardBubbles");
     const playerNewXPos = updatePlayerMovement(keys, player, Html.canvas.width);
     const newArrows = getArrows(keys, player, arrows, Html.canvas.height);
-    const tuple = getNewBubblesAndArrows(getUpdatedArrows(newArrows), bubble.map((bubble) => updateBubble(bubble, standardBubbles)), standardBubbles);
+    const tuple = getNewBubblesAndArrows(getUpdatedArrows(newArrows), bubble.map(bubble => updateBubble(bubble, standardBubbles)), standardBubbles);
     const newPlayer = player.merge({x: playerNewXPos});
     const newGameState = Map({
-        bubbles: tuple.get("bubbles"),
+        bubbles:tuple.get("bubbles"),
         player: newPlayer,
         arrows: tuple.get("arrows"),
-        isGameOver: isPlayerHit(tuple.get("bubbles"), newPlayer)
+        isGameOver: isPlayerHit(tuple.get("bubbles"), newPlayer) || state.get("isGameOver"),
+        standardBubbles: standardBubbles
     });
-    if (!newGameState.get("isGameOver") && state.get("isGameOver")) {
+    if (!state.get("isGameOver")) {
         return newGameState;
     }
     return state; // game over

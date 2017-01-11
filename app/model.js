@@ -15,6 +15,7 @@ const newModel = canvas => {
             color: "blue"
         }),
         arrows: List.of(),
+        isGameOver: false,
         standardBubbles: List.of(
             Map({
                 // size === 0
