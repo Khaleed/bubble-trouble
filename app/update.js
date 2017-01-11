@@ -14,10 +14,12 @@ const getNewY = (y, dt, newVY) => y + (dt * newVY);
 const doReflectX = (newX, radius, canvasWidth) => newX < radius || newX > (canvasWidth - radius);
 
 // doReflectY :: (Number, Number, Number) -> Bool
-const doReflectY = (newY, radius, canvasHeight) => newY < radius || newY > (canvasHeight - radius);
+const doReflectYtop = (newY, radius, canvasHeight) => newY < radius;
+
+const doReflectYbottom = (newY, radius, canvasHeight) => newY > (canvasHeight - radius);
 
 // updateBubble :: Map -> Map
-const updateBubble = (bubble) => {
+const updateBubble = (bubble, standardBubbles) => {
     const vX = bubble.get("vx");
     const vY = bubble.get("vy");
     const radius = bubble.get("radius");
@@ -26,13 +28,15 @@ const updateBubble = (bubble) => {
     const newVY = getNewVY(bubble.get("vy"), dt, g);
     const newX = getNewX(bubble.get("x"), dt, vX);
     const newY = getNewY(bubble.get("y"), dt, newVY);
+    const std_vy = standardBubbles.get(bubble.get("size")).get("vy_init");
     const isXreflecting = doReflectX(newX, radius, 800);
-    const isYreflecting = doReflectY(newY, radius, 600);
+    const isYtopReflecting = doReflectYtop(newY, radius, 600);
+    const isYbottomReflecting = doReflectYbottom(newY, radius, 600);
     return bubble.merge(Map({
         x: newX,
         y: newY,
         vx: isXreflecting ? vX * -1 : vX,
-        vy: isYreflecting ? newVY : vY// Side-effects -> standardBubbles
+        vy: isYtopReflecting ? -newVY : (isYbottomReflecting ? std_vy : newVY)// this is not constant due to gravity
     }));
 };
 
@@ -162,14 +166,15 @@ export const updateGame = (state, keys, Html, dt) => {
     const standardBubbles = state.get("standardBubbles");
     const playerNewXPos = updatePlayerMovement(keys, player, Html.canvas.width);
     const newArrows = getArrows(keys, player, arrows, Html.canvas.height);
-    const tuple = getNewBubblesAndArrows(getUpdatedArrows(newArrows), bubble.map(updateBubble), standardBubbles);
+    const tuple = getNewBubblesAndArrows(getUpdatedArrows(newArrows), bubble.map((bubble) => updateBubble(bubble, standardBubbles)), standardBubbles);
     const newPlayer = player.merge({x: playerNewXPos});
     const newGameState = Map({
         bubbles: tuple.get("bubbles"),
         player: newPlayer,
-        arrows: tuple.get("arrows")
+        arrows: tuple.get("arrows"),
+        isGameOver: isPlayerHit(tuple.get("bubbles"), newPlayer)
     });
-    if (!isPlayerHit(tuple.get("bubbles"), newPlayer)) {
+    if (!newGameState.get("isGameOver") && state.get("isGameOver")) {
         return newGameState;
     }
     return state; // game over
