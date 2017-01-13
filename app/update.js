@@ -23,7 +23,7 @@ const updateBubble = (bubble, standardBubbles) => {
     const vX = bubble.get("vx");
     const vY = bubble.get("vy");
     const radius = bubble.get("radius");
-    const dt = 0.02; // future -> use delta in time between requestAnimationFrame
+    const dt = 0.02; // future -> use delta in time between requestAnimationFrames
     const g = 200;
     const newVY = getNewVY(bubble.get("vy"), dt, g);
     const newX = getNewX(bubble.get("x"), dt, vX);
@@ -172,11 +172,10 @@ export const updateGame = (state, keys, Html, dt) => {
         bubbles:tuple.get("bubbles"),
         player: newPlayer,
         arrows: tuple.get("arrows"),
-        isGameOver: isPlayerHit(tuple.get("bubbles"), newPlayer) || state.get("isGameOver"),
-        standardBubbles: standardBubbles
+        isGameOver: isPlayerHit(tuple.get("bubbles"), newPlayer) || state.get("isGameOver")
     });
     if (!state.get("isGameOver")) {
         return newGameState;
     }
-    return state; // game over
+    return state;
 };
