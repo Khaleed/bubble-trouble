@@ -124,6 +124,21 @@ const makeSmallerBubble = (x, y, dir_right, color, size, standardBubbles) => {
     );
 };
 
+// getSmallerBubbles :: (Map, List) -> List
+const getSmallerBubbles = (bubble, standarBubbles) => {
+    const x = bubble.get("x");
+    const y = bubble.get("y");
+    const color = bubble.get("color");
+    const size = bubble.get("size");
+    const isLeftOnRight = false;
+    const isRightOnRight = true;
+
+    return List.of(
+        makeSmallerBubble(x, y, isLeftOnRight, color, size - 1, standarBubbles),
+        makeSmallerBubble(x, y, isRightOnRight, color, size - 1, standarBubbles)
+    );
+};
+
 // getNewArrowsAndBubbles :: (List, List, List) -> Map
 const getNewBubblesAndArrows = (arrows, bubbles, standardBubbles) => {
     for (let i = 0; i < arrows.size; i += 1) {
@@ -133,24 +148,7 @@ const getNewBubblesAndArrows = (arrows, bubbles, standardBubbles) => {
                 const newBubbles1 = bubbles.delete(j);
                 const oldBubble = bubbles.get(j);
                 const newBubbles2 = oldBubble.get("size") > 0  ?
-                          newBubbles1.push(
-                              makeSmallerBubble(
-                                  oldBubble.get("x") - oldBubble.get("radius"),
-                                  oldBubble.get("y"),
-                                  false,//moving left
-                                  oldBubble.get("color"),
-                                  oldBubble.get("size") - 1,
-                                  standardBubbles
-                              ),
-                              makeSmallerBubble(// moving right
-                                  oldBubble.get("x") + oldBubble.get("radius"),
-                                  oldBubble.get("y"),
-                                  true,//moving left
-                                  oldBubble.get("color"),
-                                  oldBubble.get("size") - 1,
-                                  standardBubbles
-                             )
-                          ) : newBubbles1;
+                          newBubbles1.concat(getSmallerBubbles(oldBubble, standardBubbles)) : newBubbles1;
                 return Map({ arrows: newArrows, bubbles: newBubbles2 });
             }
         }
