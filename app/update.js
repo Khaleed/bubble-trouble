@@ -157,11 +157,10 @@ const getNewBubblesAndArrows = (arrows, bubbles, standardBubbles) => {
 };
 
 // updateGame :: (Map, {String: Map}, {String: HTML}, Number) -> Map
-export const updateGame = (state, keys, Html, dt) => {
+export const updateGame = (state, standardBubbles, keys, Html, dt) => {
     const player = state.get("player");
     const bubble = state.get("bubbles");
     const arrows = state.get("arrows");
-    const standardBubbles = state.get("standardBubbles");
     const playerNewXPos = updatePlayerMovement(keys, player, Html.canvas.width);
     const newArrows = getArrows(keys, player, arrows, Html.canvas.height);
     const tuple = getNewBubblesAndArrows(getUpdatedArrows(newArrows), bubble.map(bubble => updateBubble(bubble, standardBubbles)), standardBubbles);
