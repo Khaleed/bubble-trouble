@@ -3,7 +3,7 @@ import { default as Html } from "./html";
 import { interrogateKeyState, keys } from "./keystate";
 import { List, Map } from "immutable";
 import { updateGame } from "./update";
-import { newModel } from "./model";
+import { createModel, standardBubbles } from "./model";
 
 interrogateKeyState(keys);
 
@@ -39,16 +39,18 @@ window.addEventListener("load", () => {
         drawPlayer(gameState.get("player"));
     };
 
-    const runGameRenderingCycle = (gameState, lastTime, Html) => {
+    const runGameRenderingCycle = (gameState, standardBubbles, keys, lastTime, Html) => {
         const time = new Date().getTime();
         const deltaInTime = time - (lastTime || time);
         draw(gameState, Html);
         requestAnimationFrame(
             () => runGameRenderingCycle(
-                updateGame(gameState, keys, Html, deltaInTime), time, Html
+                updateGame(
+                    gameState, standardBubbles, keys, Html, deltaInTime
+                ), standardBubbles, keys, time, Html
             )
         );
     };
 
-    runGameRenderingCycle(newModel(Html.canvas), 0, Html);
+    runGameRenderingCycle(createModel(Html.canvas), standardBubbles, keys, 0, Html);
 });
