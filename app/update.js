@@ -126,6 +126,9 @@ const makeSmallerBubble = (x, y, dir_right, color, size, standardBubbles) => {
 
 // getSmallerBubbles :: (Map, List) -> List
 const createSmallerBubbles = (bubble, standarBubbles) => {
+    if (bubble.get("size") === 0) {
+        return List.of();
+    }
     const x = bubble.get("x");
     const y = bubble.get("y");
     const color = bubble.get("color");
@@ -136,49 +139,35 @@ const createSmallerBubbles = (bubble, standarBubbles) => {
     );
 };
 
-// // getNewArrowsAndBubbles :: (List, List, List) -> Map
-// const getNewBubblesAndArrows = (arrows, bubbles, standardBubbles) => {
-//     for (let i = 0; i < arrows.size; i += 1) {
-//         for (let j = 0; j < bubbles.size; j += 1) {
-//             if (isRectStrikingBubble(bubbles.get(j), arrows.get(i))) {
-//                 const newArrows = arrows.delete(i);
-//                 const newBubbles1 = bubbles.delete(j);
-//                 const bubble = bubbles.get(j);
-//                 const newBubbles2 = bubble.get("size") > 0  ? newBubbles1.concat(
-//                     createSmallerBubbles(bubble, standardBubbles)
-//                 ) : newBubbles1;
-//                 return Map({ arrows: newArrows, bubbles: newBubbles2 });
-//             }
-//         }
-//     }
-//     return Map({ arrows: arrows, bubbles: bubbles });
-// };
-
-// getNewBubblesAndArrows :: (List, List, List) -> Map
-const getNewArrowsAndBubbles = (arrows, bubbles, standardBubbles) => {
-    const seed = Map({
-        arrows: List.of(),
-        bubbles: List.of()
-    });
-
-    return arrows.reduce((seed, arrow) => {
-        return bubbles.reduce((seed, bubble) => {
-            const newArrows = arrows.filter(isRectStrikingBubble(bubble, arrow));
-            const newBubbles1 = bubbles.filter(isRectStrikingBubble(bubble, arrow));
-            const newBubbles2 = bubble.get("size") > 0 ? newBubbles1.concat(
-                createSmallerBubbles(bubble, standardBubbles)
-            ) : newBubbles1;
-            return seed.merge(Map({
-                arrows: newArrows,
-                bubbles: newBubbles2
-            }));
-        }, seed);
-        return seed.merge(Map({
-            arrows: arrows,
-            bubbles: bubbles
-        }));
-    }, seed);
+// getNewArrowsAndBubbles :: (List, List, List) -> Map
+const getNewBubblesAndArrows = (arrows, bubbles, standardBubbles) => {
+    for (let i = 0; i < arrows.size; i += 1) {
+        for (let j = 0; j < bubbles.size; j += 1) {
+            if (isRectStrikingBubble(bubbles.get(j), arrows.get(i))) {
+                const newArrows = arrows.delete(i);
+                const newBubbles1 = bubbles.delete(j);
+                const bubble = bubbles.get(j);
+                const newBubbles2 = bubble.get("size") > 0  ? newBubbles1.concat(
+                    createSmallerBubbles(bubble, standardBubbles)
+                ) : newBubbles1;
+                return Map({ arrows: newArrows, bubbles: newBubbles2 });
+            }
+        }
+    }
+    return Map({ arrows: arrows, bubbles: bubbles });
 };
+
+// // getNewBubblesAndArrows :: (List, List, List) -> Map
+// const getNewArrowsAndBubbles = (arrows, bubbles, standardBubbles) => {
+
+//     const seed = Map({
+//         arrows: List.of(),
+//         bubbles: List.of()
+//     });
+
+//     return arrows.reduce((seed, arrow), seed);
+
+//    };
 
 // updateGame :: (Map, {String: Map}, {String: HTML}, Number) -> Map
 export const updateGame = (state, standardBubbles, keys, Html, dt) => {
