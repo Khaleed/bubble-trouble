@@ -1,7 +1,7 @@
-import {Map } from "immutable";
+import { Map } from "immutable";
 
 // createBubble :: (Canvas, Number, Number, String, Number, Number) => Map
-const createBubble = (x, y, vx, vy, color, radius=25, size=2) => {
+const createBubble = (x, y, vx, vy, color, radius=45, size=2) => {
     return Map({
         x: x,
         y: y,
