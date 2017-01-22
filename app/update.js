@@ -211,4 +211,4 @@ const updateGame = (state, standardBubbles, scores, keys, Html, dt) => {
     return state;
 };
 
-export { updateGame, isRectStrikingBubble };
+export { updateGame };
