@@ -32,11 +32,17 @@ window.addEventListener("load", () => {
         screen.fillRect(arrow.get("x"), arrow.get("y"), arrow.get("w"), Html.canvas.height);
     };
 
+    const showScore = score => {
+        const scoreElem = document.getElementById("score");
+        scoreElem.innerHTML = score; // eslint-disable-line fp/no-mutation
+    };
+
     const draw = (gameState, Html) => {
         screen.clearRect(0, 0, Html.canvas.width, Html.canvas.height);
         gameState.get("bubbles").map(drawBubble);
         gameState.get("arrows").map(drawArrow);
         drawPlayer(gameState.get("player"));
+        showScore(gameState.get("score"));
     };
 
     const runGameRenderingCycle = (gameState, standardBubbles, scores, keys, lastTime, Html) => {

@@ -141,22 +141,17 @@ const createSmallerBubbles = (bubble, standarBubbles) => {
 
 // updateScores :: (Html, Map, Map, Map) -> Int
 const updateScores = (score, scores, bubble) => {
-    const scoreElem = document.getElementById("score");
     if (bubble.get("radius") === 10) {
         score += scores.get(0);
-        scoreElem.innerHTML = score;
     }
     if (bubble.get("radius") === 20) {
         score += scores.get(1);
-        scoreElem.innerHTML = score;
     }
     if (bubble.get("radius") === 30) {
         score += scores.get(2);
-        scoreElem.innerHTML = score;
     }
     if (bubble.get("radius") === 45) {
         score += scores.get(3);
-        scoreElem.innerHTML = score;
     }
     return score;
 };
