@@ -139,53 +139,76 @@ const createSmallerBubbles = (bubble, standarBubbles) => {
     );
 };
 
+// updateScores :: (Html, Map, Map, Map) -> Int
+const updateScores = (score, scores, bubble) => {
+    const scoreElem = document.getElementById("score");
+    if (bubble.get("radius") === 10) {
+        score += scores.get(0);
+        scoreElem.innerHTML = score;
+    }
+    if (bubble.get("radius") === 20) {
+        score += scores.get(1);
+        scoreElem.innerHTML = score;
+    }
+    if (bubble.get("radius") === 30) {
+        score += scores.get(2);
+        scoreElem.innerHTML = score;
+    }
+    if (bubble.get("radius") === 45) {
+        score += scores.get(3);
+        scoreElem.innerHTML = score;
+    }
+    return score;
+};
+
 // getNewArrowsAndBubbles :: (List, List, List) -> Map
-const getNewBubblesAndArrows = (arrows, bubbles, standardBubbles) => {
+const getNewBubblesAndArrows = (arrows, bubbles, standardBubbles, score, scores) => {
     for (let i = 0; i < arrows.size; i += 1) {
         for (let j = 0; j < bubbles.size; j += 1) {
             if (isRectStrikingBubble(bubbles.get(j), arrows.get(i))) {
                 const newArrows = arrows.delete(i);
                 const newBubbles1 = bubbles.delete(j);
                 const bubble = bubbles.get(j);
+                const newScore = updateScores(score, scores, bubble);
                 const newBubbles2 = bubble.get("size") > 0  ? newBubbles1.concat(
                     createSmallerBubbles(bubble, standardBubbles)
                 ) : newBubbles1;
-                return Map({ arrows: newArrows, bubbles: newBubbles2 });
+                return Map({ arrows: newArrows, bubbles: newBubbles2, score: newScore });
             }
         }
     }
-    return Map({ arrows: arrows, bubbles: bubbles });
+    return Map({ arrows: arrows, bubbles: bubbles, score: score });
 };
 
-// // getNewBubblesAndArrows :: (List, List, List) -> Map
-// const getNewArrowsAndBubbles = (arrows, bubbles, standardBubbles) => {
-
-//     const seed = Map({
-//         arrows: List.of(),
-//         bubbles: List.of()
-//     });
-
-//     return arrows.reduce((seed, arrow), seed);
-
-//    };
-
 // updateGame :: (Map, {String: Map}, {String: HTML}, Number) -> Map
-export const updateGame = (state, standardBubbles, keys, Html, dt) => {
+const updateGame = (state, standardBubbles, scores, keys, Html, dt) => {
     const player = state.get("player");
     const bubble = state.get("bubbles");
     const arrows = state.get("arrows");
+    const score = state.get("score");
     const playerNewXPos = updatePlayerMovement(keys, player, Html.canvas.width);
     const newArrows = getArrows(keys, player, arrows, Html.canvas.height);
-    const tuple = getNewBubblesAndArrows(getUpdatedArrows(newArrows), bubble.map(bubble => updateBubble(bubble, standardBubbles)), standardBubbles);
+    const tuple = getNewBubblesAndArrows(
+        getUpdatedArrows(
+            newArrows
+        ), bubble.map(
+            bubble => updateBubble(
+                bubble, standardBubbles
+            )
+        ), standardBubbles, score, scores
+    );
     const newPlayer = player.merge({x: playerNewXPos});
     const newGameState = Map({
         bubbles:tuple.get("bubbles"),
         player: newPlayer,
         arrows: tuple.get("arrows"),
-        isGameOver: isPlayerHit(tuple.get("bubbles"), newPlayer) || state.get("isGameOver")
+        isGameOver: isPlayerHit(tuple.get("bubbles"), newPlayer) || state.get("isGameOver"),
+        score: tuple.get("score")
     });
     if (!state.get("isGameOver")) {
         return newGameState;
     }
     return state;
 };
+
+export { updateGame, isRectStrikingBubble };
