@@ -14,7 +14,8 @@ const createModel = canvas => {
             color: "blue"
         }),
         arrows: List.of(),
-        isGameOver: false
+        isGameOver: false,
+        score: 0
     });
 };
 
@@ -41,4 +42,11 @@ const standardBubbles = List.of(
     })
 );
 
-export { createModel, standardBubbles };
+const scores = List.of(
+    5,
+    10,
+    15,
+    20
+);
+
+export { createModel, standardBubbles, scores};
