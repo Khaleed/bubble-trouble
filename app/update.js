@@ -175,6 +175,14 @@ const getNewBubblesAndArrows = (arrows, bubbles, standardBubbles, score, scores)
     return Map({ arrows: arrows, bubbles: bubbles, score: score });
 };
 
+// gameOver :: (Map, Map) -> Map
+const isGameOver = (state, newGameState) => {
+    if (!state.get("isGameOver")) {
+        return newGameState;
+    }
+    return state;
+};
+
 // updateGame :: (Map, {String: Map}, {String: HTML}, Number) -> Map
 const updateGame = (state, standardBubbles, scores, keys, Html, dt) => {
     const player = state.get("player");
@@ -200,10 +208,7 @@ const updateGame = (state, standardBubbles, scores, keys, Html, dt) => {
         isGameOver: isPlayerHit(tuple.get("bubbles"), newPlayer) || state.get("isGameOver"),
         score: tuple.get("score")
     });
-    if (!state.get("isGameOver")) {
-        return newGameState;
-    }
-    return state;
+    return isGameOver(state, newGameState);
 };
 
 export { updateGame };
