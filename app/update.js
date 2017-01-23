@@ -142,16 +142,16 @@ const createSmallerBubbles = (bubble, standarBubbles) => {
 // updateScores :: (Html, Map, Map, Map) -> Int
 const updateScores = (score, scores, bubble) => {
     if (bubble.get("radius") === 10) {
-        score += scores.get(0);
+        return score + scores.get(0);
     }
     if (bubble.get("radius") === 20) {
-        score += scores.get(1);
+        return score + scores.get(1);
     }
     if (bubble.get("radius") === 30) {
-        score += scores.get(2);
+        return score + scores.get(2);
     }
     if (bubble.get("radius") === 45) {
-        score += scores.get(3);
+        return score + scores.get(3);
     }
     return score;
 };
