@@ -192,13 +192,7 @@ const updateGame = (state, standardBubbles, scores, keys, Html, dt) => {
     const playerNewXPos = updatePlayerMovement(keys, player, Html.canvas.width);
     const newArrows = getArrows(keys, player, arrows, Html.canvas.height);
     const tuple = getNewBubblesAndArrows(
-        getUpdatedArrows(
-            newArrows
-        ), bubble.map(
-            bubble => updateBubble(
-                bubble, standardBubbles
-            )
-        ), standardBubbles, score, scores
+        getUpdatedArrows(newArrows), bubble.map(bubble => updateBubble(bubble, standardBubbles)), standardBubbles, score, scores
     );
     const newPlayer = player.merge({x: playerNewXPos});
     const newGameState = Map({
