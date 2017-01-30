@@ -23,21 +23,23 @@ const updateBubble = (bubble, standardBubbles) => {
     const vX = bubble.get("vx");
     const vY = bubble.get("vy");
     const radius = bubble.get("radius");
-    const dt = 0.02; // future -> use delta in time between requestAnimationFrames
+    const dt = 0.02;
     const g = 200;
-    const newVY = getNewVY(bubble.get("vy"), dt, g);
+    const newVY = getNewVY(vY, dt, g);
     const newX = getNewX(bubble.get("x"), dt, vX);
     const newY = getNewY(bubble.get("y"), dt, newVY);
     const std_vy = standardBubbles.get(bubble.get("size")).get("vy_init");
     const isXreflecting = doReflectX(newX, radius, 800);
     const isYtopReflecting = doReflectYtop(newY, radius, 600);
     const isYbottomReflecting = doReflectYbottom(newY, radius, 600);
-    return bubble.merge(Map({
-        x: newX,
-        y: newY,
-        vx: isXreflecting ? vX * -1 : vX,
-        vy: isYtopReflecting ? -newVY : (isYbottomReflecting ? std_vy : newVY)// this is not constant due to gravity
-    }));
+    return bubble.merge(
+        Map({
+            x: newX,
+            y: newY,
+            vx: isXreflecting ? vX * -1 : vX,
+            vy: isYtopReflecting ? -newVY : (isYbottomReflecting ? std_vy : newVY)// this is not constant due to gravity
+        })
+    );
 };
 
 // updateArrow :: Map -> MayBe
@@ -72,7 +74,8 @@ const getArrows = (keys, player, arrows, canvasHeight) => {
     const newArrow = Map({
         x: player.get("x") + (player.get("w") / 2) - 1,
         y: canvasHeight,
-        w: 3});
+        w: 3
+    });
     return createArrows(keys, arrows, newArrow);
 };
 

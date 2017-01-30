@@ -51,9 +51,7 @@ window.addEventListener("load", () => {
         draw(gameState, Html);
         requestAnimationFrame(
             () => runGameRenderingCycle(
-                updateGame(
-                    gameState, standardBubbles, scores, keys, Html, deltaInTime
-                ), standardBubbles, scores, keys, time, Html
+                updateGame(gameState, standardBubbles, scores, keys, Html, deltaInTime), standardBubbles, scores, keys, time, Html
             )
         );
     };
