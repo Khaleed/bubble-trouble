@@ -1,4 +1,4 @@
-import { List, Map } from "immutable";
+import { List, Map, Set } from "immutable";
 import { dist, partial, curry, compose, createBubble } from "./helpers";
 
 // getNewVY :: (Number, Number, Number) -> Number
@@ -156,23 +156,41 @@ const updateScores = (score, scores, bubble) => {
     return score;
 };
 
-// getNewArrowsAndBubbles :: (List, List, List) -> Map
-const getNewBubblesAndArrows = (arrows, bubbles, standardBubbles, score, scores) => {
-    for (let i = 0; i < arrows.size; i += 1) {
-        for (let j = 0; j < bubbles.size; j += 1) {
-            if (isRectStrikingBubble(bubbles.get(j), arrows.get(i))) {
-                const newArrows = arrows.delete(i);
-                const newBubbles1 = bubbles.delete(j);
-                const bubble = bubbles.get(j);
-                const newScore = updateScores(score, scores, bubble);
-                const newBubbles2 = bubble.get("size") > 0  ? newBubbles1.concat(
-                    createSmallerBubbles(bubble, standardBubbles)
-                ) : newBubbles1;
-                return Map({ arrows: newArrows, bubbles: newBubbles2, score: newScore });
-            }
-        }
-    }
-    return Map({ arrows: arrows, bubbles: bubbles, score: score });
+// // getNewArrowsAndBubbles :: (List, List, List) -> Map
+// const getNewBubblesAndArrows = (arrows, bubbles, standardBubbles, score, scores) => {
+//     for (let i = 0; i < arrows.size; i += 1) {
+//         for (let j = 0; j < bubbles.size; j += 1) {
+//             if (isRectStrikingBubble(bubbles.get(j), arrows.get(i))) {
+//                 const newArrows = arrows.delete(i);
+//                 const newBubbles1 = bubbles.delete(j);
+//                 const bubble = bubbles.get(j);
+//                 const newScore = updateScores(score, scores, bubble);
+//                 const newBubbles2 = bubble.get("size") > 0  ? newBubbles1.concat(
+//                     createSmallerBubbles(bubble, standardBubbles)
+//                 ) : newBubbles1;
+//                 return Map({ arrows: newArrows, bubbles: newBubbles2, score: newScore });
+//             }
+//         }
+//     }
+//     return Map({ arrows: arrows, bubbles: bubbles, score: score });
+// };
+
+// getNewBubblesAndArrows:: Map({Set<List<Map>>} -> Map({Set<List<Map>>}))
+const getNewBubblesAndArrows = seeds => {
+    const arrows = seeds.get("arrows");
+    const bubbles = seeds.get("bubbles");
+
+    const collisions = arrows.reduce((seeds, arrow) => {
+        const newBubbleCollisions = bubbles.filter(partial(isRectStrikingBubble, arrow));
+        return seeds.update("arrowCollisions", arrowColls => newBubbleCollisions.size ? arrowColls.add(arrow) : arrowColls)
+                    .update("arrowCollisions", bubbleColls => bubbleColls.union(newBubbleCollisions));
+    }, Map({ bubbleCollions: Set(), arrowCollisions: Set()} ));
+
+    const arrowCollisions = collisions.get("arrowCollisions");
+    const bubbleCollisions = collisions.get("bubbleCollisions");
+
+    return seeds.update("arrows", arrows => arrows.substract(arrowCollisions))
+                .update("bubbles", bubbles => bubbles.substract(bubbleCollisions));
 };
 
 // gameOver :: (Map, Map) -> Map
