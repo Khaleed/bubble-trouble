@@ -1,5 +1,6 @@
 import { List, Map, Set } from "immutable";
-import { dist, partial, curry, compose, createBubble } from "./helpers";
+import { partial, curry, compose, flatten } from "./helpers";
+import { createBubble, dist } from "./helpers";
 
 // getNewVY :: (Number, Number, Number) -> Number
 const getNewVY = (vy, dt, g) => vy + (g * dt);
