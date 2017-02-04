@@ -161,44 +161,41 @@ const updateScores = (score, scores, bubble) => {
     return score;
 };
 
-// // getNewArrowsAndBubbles :: (List, List, List) -> Map
-// const getNewBubblesAndArrows = (arrows, bubbles, standardBubbles, score, scores) => {
-//     for (let i = 0; i < arrows.size; i += 1) {
-//         for (let j = 0; j < bubbles.size; j += 1) {
-//             if (isRectStrikingBubble(bubbles.get(j), arrows.get(i))) {
-//                 const newArrows = arrows.delete(i);
-//                 const newBubbles1 = bubbles.delete(j);
-//                 const bubble = bubbles.get(j);
-//                 const newScore = updateScores(score, scores, bubble);
-//                 const newBubbles2 = bubble.get("size") > 0  ? newBubbles1.concat(
-//                     createSmallerBubbles(bubble, standardBubbles)
-//                 ) : newBubbles1;
-//                 return Map({ arrows: newArrows, bubbles: newBubbles2, score: newScore });
-//             }
-//         }
-//     }
-//     return Map({ arrows: arrows, bubbles: bubbles, score: score });
-// };
-
-// getNewBubblesAndArrows:: Map({Set<List<Map>>} -> Map({Set<List<Map>>}))
-const getNewBubblesAndArrows = seeds => {
-    const arrows = seeds.get("arrows");
-    const bubbles = seeds.get("bubbles");
-
-    const collisions = arrows.reduce((seeds, arrow) => {
-        const newBubbleCollisions = bubbles.filter(partial(isRectStrikingBubble, arrow));
-        return seeds.update("arrowCollisions", arrowColls => newBubbleCollisions.size ? arrowColls.add(arrow) : arrowColls)
-                    .update("arrowCollisions", bubbleColls => bubbleColls.union(newBubbleCollisions));
-    }, Map({ bubbleCollions: Set(), arrowCollisions: Set()} ));
-
-    const arrowCollisions = collisions.get("arrowCollisions");
-    const bubbleCollisions = collisions.get("bubbleCollisions");
-
-    return seeds.update("arrows", arrows => arrows.substract(arrowCollisions))
-                .update("bubbles", bubbles => bubbles.substract(bubbleCollisions));
+// makePair :: ([Arrows], [Bubbles]) -> [(Arrows, Bubbles)]
+const makePair = (xs, ys) => {
+    return xs.map(x => flatten(ys.map(y => List.of(x, y))));
 };
 
-// gameOver :: (Map, Map) -> Map
+// noGood :: ([(Arrows, Bubbles)], [NoGoodArrows]) -> [(NoGoodArrows, NoGoodBubbles)]
+const noGood = xs => {
+    const ys = xs.filter(x => isRectStrikingBubble(x.get(0), x.get(1)));
+    const zs = ys.reduce((acc, y) => {
+        return acc.update("arrows", arrows => arrows.push(y.get(0)))
+                  .update("bubbles", bubbles => bubbles.push(y.get(1)));
+    }, Map({ arrows: List(), bubbles: List()}));
+    return List.of(zs.get("arrows"), zs.get("bubbles"));
+};
+
+// goodArrows :: ([Arrows], [NoGoodArrows]) -> [GoodArrows]
+const goodArrows = (xs, ys) => {
+    return xs.filter(x => !ys.some(y => y === x));
+};
+
+// goodBubbles :: ([Bubbles], [NoGoodBubbles], [StandardBubbles])-> [GoodBubbles]
+const goodBubbles = (xs, ys, zs) => {
+    return xs.reduce((acc, x) => {
+        // if x bubble it is in [NoGoodBubbles]
+        if (ys.some(y => y === x)) {
+            // create smaller GoodBubble
+            return acc.concat(createSmallerBubbles(
+                x, zs
+            ));
+        }
+        return acc;
+    }, List());
+};
+
+// gameOver :: ((Map<Model>, Map<NewModel>)) -> MayBe
 const isGameOver = (state, newGameState) => {
     if (!state.get("isGameOver")) {
         return newGameState;
@@ -206,24 +203,25 @@ const isGameOver = (state, newGameState) => {
     return state;
 };
 
-// updateGame :: (Map, {String: Map}, {String: HTML}, Number) -> Map
+// updateGame :: ((Map<Model>), [StandardBubbles], [Scores], { String: (Map<Bool>) }, HTML, Number)) -> Map
 const updateGame = (state, standardBubbles, scores, keys, Html, dt) => {
     const player = state.get("player");
-    const bubble = state.get("bubbles");
+    const bubbles = state.get("bubbles");
     const arrows = state.get("arrows");
     const score = state.get("score");
     const playerNewXPos = updatePlayerMovement(keys, player, Html.canvas.width);
-    const newArrows = getArrows(keys, player, arrows, Html.canvas.height);
-    const tuple = getNewBubblesAndArrows(
-        getUpdatedArrows(newArrows), bubble.map(bubble => updateBubble(bubble, standardBubbles)), standardBubbles, score, scores
-    );
+    const makeArrows = getArrows(keys, player, arrows, Html.canvas.height);
+    const newArrows = getUpdatedArrows(makeArrows);
+    const newBubbles = bubbles.map(bubble => updateBubble(bubble, standardBubbles));
+    const collisions = noGood(makePair(newArrows, newBubbles));
+    const nonCollisionArrows = goodArrows(newArrows, collisions.get("arrows"));
+    const nonCollisionBubbles = goodBubbles(newBubbles, collisions.get("bubbles"), standardBubbles);
     const newPlayer = player.merge({x: playerNewXPos});
     const newGameState = Map({
-        bubbles:tuple.get("bubbles"),
+        bubbles: nonCollisionBubbles,
         player: newPlayer,
-        arrows: tuple.get("arrows"),
-        isGameOver: isPlayerHit(tuple.get("bubbles"), newPlayer) || state.get("isGameOver"),
-        score: tuple.get("score")
+        arrows: nonCollisionArrows,
+        isGameOver: isPlayerHit(nonCollisionBubbles, newPlayer) || state.get("isGameOver")
     });
     return isGameOver(state, newGameState);
 };
