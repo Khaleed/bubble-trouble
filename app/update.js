@@ -21,7 +21,7 @@ const doReflectYtop = (newY, radius, canvasHeight) => newY < radius;
 const doReflectYbottom = (newY, radius, canvasHeight) => newY > (canvasHeight - radius);
 
 // updateBubble :: (Bubble, [StandardBubbles], Number, Number) -> (Map<Bubble>)
-const updateBubble = (bubble, standardBubbles, canvasWidth, canvasHeight) => {
+const updateBubble = (bubble, xs, canvasWidth, canvasHeight) => {
     const vX = bubble.get("vx");
     const vY = bubble.get("vy");
     const radius = bubble.get("radius");
@@ -30,7 +30,7 @@ const updateBubble = (bubble, standardBubbles, canvasWidth, canvasHeight) => {
     const newVY = getNewVY(vY, dt, g);
     const newX = getNewX(bubble.get("x"), dt, vX);
     const newY = getNewY(bubble.get("y"), dt, newVY);
-    const std_vy = standardBubbles.get(bubble.get("size")).get("vy_init");
+    const std_vy = xs.get(bubble.get("size")).get("vy_init");
     return bubble.merge(
         Map({
             x: newX,
@@ -63,19 +63,19 @@ const updatePlayerMovement = (keys, player, canvasWidth) => {
 };
 
 // isPlayerShooting :: ({ String: (Map<Bool>) }, [Arrows]) -> Bool
-const isPlayerShooting = (keys, arrows) => keys.state.get("isSpaceKeyPressed") && arrows.size === 0;
+const isPlayerShooting = (keys, xs) => keys.state.get("isSpaceKeyPressed") && xs.size === 0;
 
 // createArrow :: ({ String: (Map<Bool>) }, [Arrows], (Map<Arrow>)) -> [Arrows]
-const createArrows = (keys, arrows, newArrow) => isPlayerShooting(keys, arrows) ? arrows.push(newArrow) : arrows;
+const createArrows = (keys, xs, newArrow) => isPlayerShooting(keys, xs) ? xs.push(newArrow) : arrows;
 
 // getNewArrows :: ({ String: (Map<Bool>) }, Map, List, Number) -> [Arrows]
-const getArrows = (keys, player, arrows, canvasHeight) => {
+const getArrows = (keys, player, xs, canvasHeight) => {
     const newArrow = Map({
         x: player.get("x") + (player.get("w") / 2) - 1,
         y: canvasHeight,
         w: 3
     });
-    return createArrows(keys, arrows, newArrow);
+    return createArrows(keys, xs, newArrow);
 };
 
 // filterArrows :: [Arrows] -> [Arrows]
@@ -112,22 +112,22 @@ const isRectStrikingBubble = (rect, bubble) => {
 // isPlayerHit :: ([Bubbles], (Map<Player>)) -> Bool
 const isPlayerHit = (xs, player) => xs.reduce((acc, x) => acc || isRectStrikingBubble(player, x) ? true: false, false);
 
-// makeSmallerBubble :: (Number, Number, Bool, String, Number, Map<StandardBubble>) -> Map
-const makeSmallerBubble = (x, y, dir_right, color, size, standardBubbles) => {
+// makeSmallerBubble :: (Number, Number, Bool, String, Number, [StandardBubbles]) -> Map
+const makeSmallerBubble = (x, y, dir_right, color, size, xs) => {
     const step = 100;
     return createBubble(
         x, // depends if a right or left-sided bubble
         y,
         dir_right ? step : -step,
-        standardBubbles.get(size).get("vy_init"),
+        xs.get(size).get("vy_init"),
         color,
-        standardBubbles.get(size).get("radius"),
+        xs.get(size).get("radius"),
         size
     );
 };
 
 // getSmallerBubbles :: ((Map<Bubble>), [StandardBubbles]) -> [SmallerBubbles]
-const createSmallerBubbles = (bubble, standarBubbles) => {
+const createSmallerBubbles = (bubble, xs) => {
     if (bubble.get("size") === 0) {
         return List.of();
     }
@@ -136,24 +136,24 @@ const createSmallerBubbles = (bubble, standarBubbles) => {
     const color = bubble.get("color");
     const size = bubble.get("size");
     return List.of(
-        makeSmallerBubble(x, y, false, color, size - 1, standarBubbles),
-        makeSmallerBubble(x, y, true, color, size - 1, standarBubbles)
+        makeSmallerBubble(x, y, false, color, size - 1, xs),
+        makeSmallerBubble(x, y, true, color, size - 1, xs)
     );
 };
 
 // updateScores :: (Number, [Scores], Map<Bubble>) -> Int
-const updateScores = (score, scores, bubble) => {
+const updateScores = (score, xs, bubble) => {
     if (bubble.get("radius") === 10) {
-        return score + scores.get(0);
+        return score + xs.get(0);
     }
     if (bubble.get("radius") === 20) {
-        return score + scores.get(1);
+        return score + xs.get(1);
     }
     if (bubble.get("radius") === 30) {
-        return score + scores.get(2);
+        return score + xs.get(2);
     }
     if (bubble.get("radius") === 45) {
-        return score + scores.get(3);
+        return score + xs.get(3);
     }
     return score;
 };
