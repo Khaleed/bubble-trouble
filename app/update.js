@@ -14,12 +14,13 @@ const getNewY = (y, dt, newVY) => y + (dt * newVY);
 // doReflectX :: (Number, Number, Number) -> Bool
 const doReflectX = (newX, radius, canvasWidth) => newX < radius || newX > (canvasWidth - radius);
 
-// doReflectY :: (Number, Number, Number) -> Bool
+// doReflectYTop :: (Number, Number, Number) -> Bool
 const doReflectYtop = (newY, radius, canvasHeight) => newY < radius;
 
+// doReflectYbottom :: (Number, Number, Number) -> Bool
 const doReflectYbottom = (newY, radius, canvasHeight) => newY > (canvasHeight - radius);
 
-// updateBubble :: Map -> Map
+// updateBubble :: (Bubble, [StandardBubbles]) -> (Map<Bubble>)
 const updateBubble = (bubble, standardBubbles) => {
     const vX = bubble.get("vx");
     const vY = bubble.get("vy");
@@ -43,7 +44,7 @@ const updateBubble = (bubble, standardBubbles) => {
     );
 };
 
-// updateArrow :: Map -> MayBe
+// updateArrow :: (Map<Arrow>) -> MayBe
 const updateArrow = arrow => {
     const step = 10;
     if (arrow === null) {
@@ -54,7 +55,7 @@ const updateArrow = arrow => {
     return newY > 0 ? newArrow : null;
 };
 
-// updatePlayerMovement :: ({String: Map}, Map, Number) -> Number
+// updatePlayerMovement :: ({ String: (Map<Bool>) }, (Map<Player>), Number) -> Number
 const updatePlayerMovement = (keys, player, canvasWidth) => {
     const step = 10;
     const playerX = player.get("x");
@@ -64,13 +65,13 @@ const updatePlayerMovement = (keys, player, canvasWidth) => {
     return playerX + deltaInMovement;
 };
 
-// isPlayerShooting :: ({String: Map}, List) -> Bool
+// isPlayerShooting :: ({ String: (Map<Bool>) }, [Arrows]) -> Bool
 const isPlayerShooting = (keys, arrows) => keys.state.get("isSpaceKeyPressed") && arrows.size === 0;
 
-// createArrow :: ({String: Map}, List, Map) -> List
-const createArrows = (keys, arrows, newArrow) => isPlayerShooting(keys, arrows) ? arrows.push(newArrow) : arrows; // eslint-disable-line fp/no-mutating-methods
+// createArrow :: ({ String: (Map<Bool>) }, [Arrows], (Map<Arrow>)) -> [Arrows]
+const createArrows = (keys, arrows, newArrow) => isPlayerShooting(keys, arrows) ? arrows.push(newArrow) : arrows;
 
-// getNewArrows :: ({String: Map}, Map, List, Number) -> List
+// getNewArrows :: ({ String: (Map<Bool>) }, Map, List, Number) -> [Arrows]
 const getArrows = (keys, player, arrows, canvasHeight) => {
     const newArrow = Map({
         x: player.get("x") + (player.get("w") / 2) - 1,
@@ -80,17 +81,17 @@ const getArrows = (keys, player, arrows, canvasHeight) => {
     return createArrows(keys, arrows, newArrow);
 };
 
-// filterArrows :: List -> List
-const filterArrows = ary => ary.filter(x => x !== null);
+// filterArrows :: [Arrows] -> [Arrows]
+const filterArrows = xs => xs.filter(x => x !== null);
 
-// updateArrows :: List -> List
-const updateArrows = ary => ary.map(updateArrow);
+// updateArrows :: [Arrows] -> [Arrows]
+const updateArrows = xs => xs.map(updateArrow);
 
-// getUpdatedArrows :: List -> List
-const getUpdatedArrows = compose(filterArrows, updateArrows); // investigate associativity of compose
+// getUpdatedArrows :: (Function, Function) -> Function
+const getUpdatedArrows = compose(filterArrows, updateArrows);
 
-// isArrowStrikingBubble :: (Map, Map) -> Bool
-const isRectStrikingBubble = (bubble, rect) => {
+// isArrowStrikingBubble :: ((Map<Rect>), (Map<Bubble>)) -> Bool
+const isRectStrikingBubble = (rect, bubble) => {
     const bubbleXpos = bubble.get("x");
     const bubble_radius = bubble.get("radius");
     const rectXpos = rect.get("x");
@@ -111,10 +112,10 @@ const isRectStrikingBubble = (bubble, rect) => {
     return (rightBubble > leftRect) && (leftBubble < rightRect);
 };
 
-// isPlayerHit :: (List, Map) -> Bool
-const isPlayerHit = (bubbles, player) => bubbles.reduce((acc, x) => acc || isRectStrikingBubble(x, player) ? true: false, false);
+// isPlayerHit :: ([Bubbles], (Map<Player>)) -> Bool
+const isPlayerHit = (xs, player) => xs.reduce((acc, x) => acc || isRectStrikingBubble(player, x) ? true: false, false);
 
-// makeSmallerBubble :: (Number, Map, Bool, List) -> Map
+// makeSmallerBubble :: (Number, Number, Bool, String, Number, Map<StandardBubble>) -> Map
 const makeSmallerBubble = (x, y, dir_right, color, size, standardBubbles) => {
     const step = 100;
     return createBubble(
@@ -128,7 +129,7 @@ const makeSmallerBubble = (x, y, dir_right, color, size, standardBubbles) => {
     );
 };
 
-// getSmallerBubbles :: (Map, List) -> List
+// getSmallerBubbles :: ((Map<Bubble>), [StandardBubbles]) -> [SmallerBubbles]
 const createSmallerBubbles = (bubble, standarBubbles) => {
     if (bubble.get("size") === 0) {
         return List.of();
@@ -143,7 +144,7 @@ const createSmallerBubbles = (bubble, standarBubbles) => {
     );
 };
 
-// updateScores :: (Html, Map, Map, Map) -> Int
+// updateScores :: (Number, [Scores], Map<Bubbles) -> Int
 const updateScores = (score, scores, bubble) => {
     if (bubble.get("radius") === 10) {
         return score + scores.get(0);
