@@ -144,7 +144,7 @@ const createSmallerBubbles = (bubble, standarBubbles) => {
     );
 };
 
-// updateScores :: (Number, [Scores], Map<Bubbles) -> Int
+// updateScores :: (Number, [Scores], Map<Bubble>) -> Int
 const updateScores = (score, scores, bubble) => {
     if (bubble.get("radius") === 10) {
         return score + scores.get(0);
