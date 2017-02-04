@@ -20,8 +20,8 @@ const doReflectYtop = (newY, radius, canvasHeight) => newY < radius;
 // doReflectYbottom :: (Number, Number, Number) -> Bool
 const doReflectYbottom = (newY, radius, canvasHeight) => newY > (canvasHeight - radius);
 
-// updateBubble :: (Bubble, [StandardBubbles]) -> (Map<Bubble>)
-const updateBubble = (bubble, standardBubbles) => {
+// updateBubble :: (Bubble, [StandardBubbles], Number, Number) -> (Map<Bubble>)
+const updateBubble = (bubble, standardBubbles, canvasWidth, canvasHeight) => {
     const vX = bubble.get("vx");
     const vY = bubble.get("vy");
     const radius = bubble.get("radius");
@@ -31,15 +31,12 @@ const updateBubble = (bubble, standardBubbles) => {
     const newX = getNewX(bubble.get("x"), dt, vX);
     const newY = getNewY(bubble.get("y"), dt, newVY);
     const std_vy = standardBubbles.get(bubble.get("size")).get("vy_init");
-    const isXreflecting = doReflectX(newX, radius, 800);
-    const isYtopReflecting = doReflectYtop(newY, radius, 600);
-    const isYbottomReflecting = doReflectYbottom(newY, radius, 600);
     return bubble.merge(
         Map({
             x: newX,
             y: newY,
-            vx: isXreflecting ? vX * -1 : vX,
-            vy: isYtopReflecting ? -newVY : (isYbottomReflecting ? std_vy : newVY)// this is not constant due to gravity
+            vx: doReflectX(newX, radius, canvasWidth) ? vX * -1 : vX,
+            vy: doReflectYtop(newY, radius, canvasHeight) ? -newVY : (doReflectYbottom(newY, radius, canvasHeight) ? std_vy : newVY)// this is not constant due to gravity
         })
     );
 };
@@ -212,7 +209,7 @@ const updateGame = (state, standardBubbles, scores, keys, Html, dt) => {
     const playerNewXPos = updatePlayerMovement(keys, player, Html.canvas.width);
     const makeArrows = getArrows(keys, player, arrows, Html.canvas.height);
     const newArrows = getUpdatedArrows(makeArrows);
-    const newBubbles = bubbles.map(bubble => updateBubble(bubble, standardBubbles));
+    const newBubbles = bubbles.map(bubble => updateBubble(bubble, standardBubbles, Html.canvas.width, Html.canvas.height));
     const collisions = noGood(makePair(newArrows, newBubbles));
     const nonCollisionArrows = goodArrows(newArrows, collisions.get("arrows"));
     const nonCollisionBubbles = goodBubbles(newBubbles, collisions.get("bubbles"), standardBubbles);
