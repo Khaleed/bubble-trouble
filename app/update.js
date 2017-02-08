@@ -66,7 +66,7 @@ const updatePlayerMovement = (keys, player, canvasWidth) => {
 const isPlayerShooting = (keys, xs) => keys.state.get("isSpaceKeyPressed") && xs.size === 0;
 
 // createArrow :: ({ String: (Map<Bool>) }, [Arrows], (Map<Arrow>)) -> [Arrows]
-const createArrows = (keys, xs, newArrow) => isPlayerShooting(keys, xs) ? xs.push(newArrow) : arrows;
+const createArrows = (keys, xs, newArrow) => isPlayerShooting(keys, xs) ? xs.push(newArrow) : xs;
 
 // getNewArrows :: ({ String: (Map<Bool>) }, Map, List, Number) -> [Arrows]
 const getArrows = (keys, player, xs, canvasHeight) => {
@@ -160,7 +160,7 @@ const updateScores = (score, xs, bubble) => {
 
 // makePair :: ([Arrows], [Bubbles]) -> [(Arrows, Bubbles)]
 const makePair = (xs, ys) => {
-    return xs.map(x => flatten(ys.map(y => List.of(x, y))));
+    return xs.zip(ys).get(0);
 };
 
 // noGood :: ([(Arrows, Bubbles)], [NoGoodArrows]) -> [(NoGoodArrows, NoGoodBubbles)]
@@ -207,8 +207,7 @@ const updateGame = (state, standardBubbles, scores, keys, Html, dt) => {
     const arrows = state.get("arrows");
     const score = state.get("score");
     const playerNewXPos = updatePlayerMovement(keys, player, Html.canvas.width);
-    const makeArrows = getArrows(keys, player, arrows, Html.canvas.height);
-    const newArrows = getUpdatedArrows(makeArrows);
+    const newArrows = getUpdatedArrows(getArrows(keys, player, arrows, Html.canvas.height));
     const newBubbles = bubbles.map(bubble => updateBubble(bubble, standardBubbles, Html.canvas.width, Html.canvas.height));
     const collisions = noGood(makePair(newArrows, newBubbles));
     const nonCollisionArrows = goodArrows(newArrows, collisions.get("arrows"));
