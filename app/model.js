@@ -1,6 +1,7 @@
 import { List, Map } from "immutable";
 import { createBubble } from "./helpers";
 
+// createModel :: Canvas -> (Map<Model>)
 const createModel = canvas => {
     const midX = canvas.width/2;
     const midY = canvas.height/2;

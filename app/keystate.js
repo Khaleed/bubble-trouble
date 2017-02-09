@@ -10,6 +10,7 @@ export const keys = {
     })
 };
 
+// interrogateKeyState :: ({ Map<Bool> }) -> (Map<Bool>)
 export function interrogateKeyState(keys) {
     document.addEventListener("keyup", e => {
         if (e.keyCode === 37) {
