@@ -27,13 +27,13 @@ const curry = (fn) => {
     return curried(fn, []);
 };
 
-// dist :: (fn, [...xs]) -> fn
+// partial :: (fn, [...xs]) -> fn
 const partial = (fn, ...init) => (...args) => fn(...init, ...args); // eslint-disable-line fp/no-rest-parameters
 
 // compose :: ([...fs]) -> fn
 const compose = (...fs) => fs.reduce((f, g) => (...args) => f(g(...args))); // eslint-disable-line fp/no-rest-parameters
 
-// flatten :: (List) => List
+// flatten :: [[xs], [ys]] -> [x, y]
 const flatten = list => list.reduce((acc, x) => acc.concat(x), []);
 
 export { createBubble, dist, partial, curry, compose, flatten };
