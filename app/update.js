@@ -168,7 +168,7 @@ const noGood = xs => {
     const ys = xs.filter(x => isRectStrikingBubble(x.get(0), x.get(1)));
     const zs = ys.reduce((acc, y) => {
         return acc.update("arrows", arrows => arrows.push(y.get(0))) // eslint-disable-line fp/no-mutating-methods
-            .update("bubbles", bubbles => bubbles.push(y.get(1))); // eslint-disable-line fp/no-mutating-methods
+                  .update("bubbles", bubbles => bubbles.push(y.get(1))); // eslint-disable-line fp/no-mutating-methods
     }, Map({ arrows: List(), bubbles: List()}));
     return List.of(zs.get("arrows"), zs.get("bubbles"));
 };
