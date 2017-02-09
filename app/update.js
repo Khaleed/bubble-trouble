@@ -66,7 +66,7 @@ const updatePlayerMovement = (keys, player, canvasWidth) => {
 const isPlayerShooting = (keys, xs) => keys.state.get("isSpaceKeyPressed") && xs.size === 0;
 
 // createArrow :: ({ String: (Map<Bool>) }, [Arrows], (Map<Arrow>)) -> [NewArrows]
-const addArrow = (keys, xs, arrow) => isPlayerShooting(keys, xs) ? xs.push(arrow) : xs;
+const addArrow = (keys, xs, arrow) => isPlayerShooting(keys, xs) ? xs.push(arrow) : xs; // eslint-disable-line fp/no-mutating-methods
 
 // getNewArrows :: ({ String: (Map<Bool>) }, (Map<Player>), [], Number) -> [Arrows]
 const createArrows = (keys, player, xs, canvasHeight) => {
@@ -126,7 +126,7 @@ const makeSmallerBubble = (x, y, dir_right, color, size, xs) => {
     );
 };
 
-// getSmallerBubbles :: ((Map<Bubble>), [StandardBubbles]) -> [SmallerBubbles]
+// createSmallerBubbles :: ((Map<Bubble>), [StandardBubbles]) -> [SmallerBubbles]
 const createSmallerBubbles = (bubble, xs) => {
     if (bubble.get("size") === 0) {
         return List.of();
@@ -167,8 +167,8 @@ const makePair = (xs, ys) => {
 const noGood = xs => {
     const ys = xs.filter(x => isRectStrikingBubble(x.get(0), x.get(1)));
     const zs = ys.reduce((acc, y) => {
-        return acc.update("arrows", arrows => arrows.push(y.get(0)))
-                  .update("bubbles", bubbles => bubbles.push(y.get(1)));
+        return acc.update("arrows", arrows => arrows.push(y.get(0))) // eslint-disable-line fp/no-mutating-methods
+            .update("bubbles", bubbles => bubbles.push(y.get(1))); // eslint-disable-line fp/no-mutating-methods
     }, Map({ arrows: List(), bubbles: List()}));
     return List.of(zs.get("arrows"), zs.get("bubbles"));
 };
