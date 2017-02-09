@@ -7,10 +7,10 @@ const createModel = canvas => {
     return Map({
         bubbles: List.of(createBubble(midX, midY, 100, 200, "red"), createBubble(midX, midY, -100, 200, "green")),
         player: Map({
-            x: canvas.width/2,
+            x: midX,
             w: 20,
             h: 40,
-            y: canvas.height - 40,
+            y: midY,
             color: "blue"
         }),
         arrows: List.of(),
