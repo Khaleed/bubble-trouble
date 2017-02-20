@@ -163,7 +163,7 @@ const makePair = (xs, ys) => {
     return xs.zip(ys).get(0);
 };
 
-// noGood :: ([(Arrows, Bubbles)], [NoGoodArrows]) -> [(NoGoodArrows, NoGoodBubbles)]
+// noGood :: ([(Arrow, Bubble)]) -> [(NoGoodArrows, NoGoodBubbles)]
 const noGood = xs => {
     const ys = xs.filter(x => isRectStrikingBubble(x.get(0), x.get(1)));
     const zs = ys.reduce((acc, y) => {
@@ -222,4 +222,4 @@ const updateGame = (state, standardBubbles, scores, keys, Html, dt) => {
     return isGameOver(state, newGameState);
 };
 
-export { updateGame };
+export { updateGame, noGood, isRectStrikingBubble };
