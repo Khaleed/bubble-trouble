@@ -110,7 +110,12 @@ const isRectStrikingBubble = (rect, bubble) => {
 };
 
 // isPlayerHit :: ([Bubbles], (Map<Player>)) -> Bool
-const isPlayerHit = (xs, player) => xs.reduce((acc, x) => acc || isRectStrikingBubble(player, x) ? true: false, false);
+// const isPlayerHit = (bubbles, player) => bubbles.reduce((acc, bubble) => acc || isRectStrikingBubble(player, bubble) ? true: false, false);
+const isPlayerHit = (bubbles, player) => {
+    return bubbles.reduce((acc, x) => {
+        return acc || isRectStrikingBubble(player, x) ? true : false;
+    }, false);
+};
 
 // makeSmallerBubble :: (Number, Number, Bool, String, Number, [StandardBubbles]) -> Map
 const makeSmallerBubble = (x, y, dir_right, color, size, xs) => {
@@ -158,39 +163,58 @@ const updateScores = (score, xs, bubble) => {
     return score;
 };
 
-// makePair :: ([Arrows], [Bubbles]) -> [(Arrows, Bubbles)]
-const makePair = (xs, ys) => {
-    return xs.zip(ys).get(0);
-};
-
-// noGood :: ([(Arrow, Bubble)]) -> [(NoGoodArrows, NoGoodBubbles)]
-const noGood = xs => {
-    const ys = xs.filter(x => isRectStrikingBubble(x.get(0), x.get(1)));
-    const zs = ys.reduce((acc, y) => {
-        return acc.update("arrows", arrows => arrows.push(y.get(0))) // eslint-disable-line fp/no-mutating-methods
-                  .update("bubbles", bubbles => bubbles.push(y.get(1))); // eslint-disable-line fp/no-mutating-methods
-    }, Map({ arrows: List(), bubbles: List()}));
-    return List.of(zs.get("arrows"), zs.get("bubbles"));
-};
-
-// goodArrows :: ([Arrows], [NoGoodArrows]) -> [GoodArrows]
-const goodArrows = (xs, ys) => {
-    return xs.filter(x => !ys.some(y => y === x));
-};
-
-// goodBubbles :: ([Bubbles], [NoGoodBubbles], [StandardBubbles])-> [GoodBubbles]
-const goodBubbles = (xs, ys, zs) => {
-    return xs.reduce((acc, x) => {
-        // if x bubble it is in [NoGoodBubbles]
-        if (ys.some(y => y === x)) {
-            // create smaller GoodBubble
-            return acc.concat(createSmallerBubbles(
-                x, zs
-            ));
+// collisionBubblesAndArrows :: ([Arrows], [Bubbles], [StandardBubbles], Int, [Scores])
+const collisionBubblesAndArrows = (arrows, bubbles, standardBubbles, score, scores) => {
+    for (let i = 0; i < arrows.size; i += 1) {
+        for (let j = 0; j < bubbles.size; j += 1) {
+            if (isRectStrikingBubble(arrows.get(i), bubbles.get(j))) {
+                const newArrows = arrows.delete(i);
+                const newBubbles1 = bubbles.delete(j);
+                const bubble = bubbles.get(j);
+                const newScore = updateScores(score, scores, bubble);
+                const newBubbles2 = bubble.get("size") > 0  ? newBubbles1.concat(
+                    createSmallerBubbles(bubble, standardBubbles)
+                ) : newBubbles1;
+                return Map({ arrows: newArrows, bubbles: newBubbles2, score: newScore });
+            }
         }
-        return acc;
-    }, List());
+    }
+    return Map({ arrows: arrows, bubbles: bubbles, score: score });
 };
+
+// // makePair :: ([Arrows], [Bubbles]) -> [(Arrow, Bubble)]
+// const makePair = (xs, ys) => {
+//     return xs.zip(ys).get(0);
+// };
+
+// // noGood :: ([(Arrow, Bubble)]) -> [[NoGoodArrows], [NoGoodBubbles]]
+// const noGood = xs => {
+//     const ys = xs.filter(x => isRectStrikingBubble(x.get(0), x.get(1)));
+//     const zs = ys.reduce((acc, y) => {
+//         return acc.update("arrows", arrows => arrows.push(y.get(0))) // eslint-disable-line fp/no-mutating-methods
+//                   .update("bubbles", bubbles => bubbles.push(y.get(1))); // eslint-disable-line fp/no-mutating-methods
+//     }, Map({ arrows: List.of(), bubbles: List.of()}));
+//     return List.of(zs.get("arrows"), zs.get("bubbles"));
+// };
+
+// // goodArrows :: ([Arrows], [NoGoodArrows]) -> [GoodArrows]
+// const goodArrows = (xs, ys) => {
+//     return xs.filter(x => !ys.some(y => y === x));
+// };
+
+// // goodBubbles :: ([Bubbles], [NoGoodBubbles], [StandardBubbles])-> [GoodBubbles]
+// const goodBubbles = (xs, ys, zs) => {
+//     return xs.reduce((acc, x) => {
+//         // if x bubble it is in [NoGoodBubbles]
+//         if (ys.some(y => y === x)) {
+//             // create smaller GoodBubble
+//             return acc.concat(createSmallerBubbles(
+//                 x, zs
+//             ));
+//         }
+//         return acc;
+//     }, List());
+// };
 
 // gameOver :: ((Map<Model>, Map<NewModel>)) -> MayBe
 const isGameOver = (state, newGameState) => {
@@ -208,18 +232,18 @@ const updateGame = (state, standardBubbles, scores, keys, Html, dt) => {
     const score = state.get("score");
     const playerNewXPos = updatePlayerMovement(keys, player, Html.canvas.width);
     const newArrows = getUpdatedArrows(createArrows(keys, player, arrows, Html.canvas.height));
-    const newBubbles = bubbles.map(bubble => updateBubble(bubble, standardBubbles, Html.canvas.width, Html.canvas.height));
-    const collisions = noGood(makePair(newArrows, newBubbles));
-    const nonCollisionArrows = goodArrows(newArrows, collisions.get("arrows"));
-    const nonCollisionBubbles = goodBubbles(newBubbles, collisions.get("bubbles"), standardBubbles);
-    const newPlayer = player.merge({x: playerNewXPos});
+    const tuple = collisionBubblesAndArrows(
+        newArrows, bubbles.map(bubble => updateBubble(bubble, standardBubbles, Html.canvas.width, Html.canvas.height)), standardBubbles, score, scores
+    );
+    const newPlayer = player.merge({ x: playerNewXPos });
     const newGameState = Map({
-        bubbles: nonCollisionBubbles,
+        bubbles: tuple.get("bubbles"),
         player: newPlayer,
-        arrows: nonCollisionArrows,
-        isGameOver: isPlayerHit(nonCollisionBubbles, newPlayer) || state.get("isGameOver")
+        arrows: tuple.get("arrows"),
+        isGameOver: isPlayerHit(tuple.get("bubbles"), newPlayer) || state.get("isGameOver"),
+        score: tuple.get("score")
     });
     return isGameOver(state, newGameState);
 };
 
-export { updateGame, noGood, isRectStrikingBubble };
+export { updateGame };
