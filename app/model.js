@@ -11,7 +11,7 @@ const createModel = canvas => {
             x: midX,
             w: 20,
             h: 40,
-            y: midY,
+            y: canvas.height - 40,
             color: "blue"
         }),
         arrows: List.of(),

@@ -87,35 +87,8 @@ const updateArrows = xs => xs.map(updateArrow);
 // getUpdatedArrows :: (Function, Function) -> Function
 const getUpdatedArrows = compose(cleanArrows, updateArrows);
 
-// isArrowStrikingBubble :: ((Map<Rect>), (Map<Bubble>)) -> Bool
-const isRectStrikingBubble = (rect, bubble) => {
-    const bubbleXpos = bubble.get("x");
-    const bubble_radius = bubble.get("radius");
-    const rectXpos = rect.get("x");
-    const rectYpos = rect.get("y");
-    const rightBubble = bubbleXpos + bubble_radius;
-    const leftBubble = bubbleXpos - bubble_radius;
-    const rightRect = rectXpos + rect.get("w");
-    const leftRect = rectXpos;
-    const rectYPos = rect.get("y");
-    const bubbleYPos = bubble.get("y");
-    // detect if rect tip is beneath bubble center
-    if (rectYPos > bubbleYPos) {
-        const dist1 = dist(bubbleXpos - rightRect, bubbleYPos - rectYPos);
-        const dist2 = dist(bubbleXpos - leftRect, bubbleYPos - rectYPos);
-        return (dist1 < bubble_radius) || (dist2 < bubble_radius);
-    }
-    // detect if rect tip is above bubble center
-    return (rightBubble > leftRect) && (leftBubble < rightRect);
-};
-
 // isPlayerHit :: ([Bubbles], (Map<Player>)) -> Bool
-// const isPlayerHit = (bubbles, player) => bubbles.reduce((acc, bubble) => acc || isRectStrikingBubble(player, bubble) ? true: false, false);
-const isPlayerHit = (bubbles, player) => {
-    return bubbles.reduce((acc, x) => {
-        return acc || isRectStrikingBubble(player, x) ? true : false;
-    }, false);
-};
+const isPlayerHit = (bubbles, player) => bubbles.reduce((acc, bubble) => acc || isRectStrikingBubble(player, bubble) ? true: false, false);
 
 // makeSmallerBubble :: (Number, Number, Bool, String, Number, [StandardBubbles]) -> Map
 const makeSmallerBubble = (x, y, dir_right, color, size, xs) => {
@@ -240,7 +213,7 @@ const updateGame = (state, standardBubbles, scores, keys, Html, dt) => {
         bubbles: tuple.get("bubbles"),
         player: newPlayer,
         arrows: tuple.get("arrows"),
-        isGameOver: isPlayerHit(tuple.get("bubbles"), newPlayer) || state.get("isGameOver"),
+        isGameOver: isPlayerHit(tuple.get("bubbles"), newPlayer) || state.isGameOver,
         score: tuple.get("score")
     });
     return isGameOver(state, newGameState);
