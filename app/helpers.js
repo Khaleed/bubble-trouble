@@ -1,6 +1,6 @@
 import { Map } from "immutable";
 
-// createBubble :: (Canvas, Number, Number, String, Number, Number) => Map
+// createBubble :: (Canvas, Number, Number, String, Number, Number) -> Map
 const createBubble = (x, y, vx, vy, color, radius=45, size=2) => {
     return Map({
         x: x,
