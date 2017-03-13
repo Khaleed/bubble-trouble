@@ -7,7 +7,7 @@ module.exports = {
     entry: path.resolve(__dirname, 'app', 'view.js'),
 
     output: {
-        path: __dirname,
+        path: path.resolve(__dirname, 'public'),
         publicPath: '/',
         filename: 'bundle.js'
     },
