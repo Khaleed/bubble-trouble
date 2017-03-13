@@ -88,7 +88,7 @@ const updateArrows = xs => xs.map(updateArrow);
 const getUpdatedArrows = compose(cleanArrows, updateArrows);
 
 // isPlayerHit :: ([Bubbles], (Map<Player>)) -> Bool
-const isPlayerHit = (bubbles, player) => bubbles.reduce((acc, bubble) => acc || isRectStrikingBubble(player, bubble) ? true: false, false);
+const isPlayerHit = (xs, player) => xs.reduce((acc, x) => acc || isRectStrikingBubble(player, x) ? true: false, false);
 
 // makeSmallerBubble :: (Number, Number, Bool, String, Number, [StandardBubbles]) -> Map
 const makeSmallerBubble = (x, y, dir_right, color, size, xs) => {
@@ -157,7 +157,7 @@ const collisionBubblesAndArrows = (arrows, bubbles, standardBubbles, score, scor
 
 // // makePair :: ([Arrows], [Bubbles]) -> [(Arrow, Bubble)]
 // const makePair = (xs, ys) => {
-//     return xs.zip(ys).get(0);
+//     return xs.map(x => flatten(ys.map(y => List(x, y))));
 // };
 
 // // noGood :: ([(Arrow, Bubble)]) -> [[NoGoodArrows], [NoGoodBubbles]]
@@ -181,15 +181,13 @@ const collisionBubblesAndArrows = (arrows, bubbles, standardBubbles, score, scor
 //         // if x bubble it is in [NoGoodBubbles]
 //         if (ys.some(y => y === x)) {
 //             // create smaller GoodBubble
-//             return acc.concat(createSmallerBubbles(
-//                 x, zs
-//             ));
+//             return acc.concat(createSmallerBubbles(x, zs));
 //         }
 //         return acc;
 //     }, List());
 // };
 
-// gameOver :: ((Map<Model>, Map<NewModel>)) -> MayBe
+// isGameOver :: ((Map<Model>, Map<NewModel>)) -> MayBe
 const isGameOver = (state, newGameState) => {
     if (!state.get("isGameOver")) {
         return newGameState;
@@ -205,6 +203,7 @@ const updateGame = (state, standardBubbles, scores, keys, Html, dt) => {
     const score = state.get("score");
     const playerNewXPos = updatePlayerMovement(keys, player, Html.canvas.width);
     const newArrows = getUpdatedArrows(createArrows(keys, player, arrows, Html.canvas.height));
+    const newBubbles = bubbles.map(bubble => updateBubble(bubble, standardBubbles, Html.canvas.width, Html.canvas.height));
     const tuple = collisionBubblesAndArrows(
         newArrows, bubbles.map(bubble => updateBubble(bubble, standardBubbles, Html.canvas.width, Html.canvas.height)), standardBubbles, score, scores
     );
