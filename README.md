@@ -1,16 +1,12 @@
-## Why?
+# Bubble Trouble
 
-Pick up higher-level problem solving skills and dive deeper into writing functional JavaScript.
-
-## Game Logic
-
-This is an implementation of the retro game Bubble Trouble. The player must shoot the bubbles before they collide with the player to complete each level. The bubbles randomly bounce around the screen. They all split into smaller bubbles when shot except the smallest one in the list of standard bubbles. There is a different scene and degree of difficulty for each level.  
+This is an implementation of the retro game Bubble Trouble. The player must shoot the bubbles before they collide with the player to complete each level. The bubbles randomly bounce around the screen. They all split into smaller bubbles when shot except the smallest one in the list of standard bubbles. There is a different scene and degree of difficulty for each level.
 
 ## Approach
 
 Drawing on the canvas, the game loop, and collision detection are all done without any libraries or frameworks. This project is written in a functional style using the Elm Architecture: Model -> Update -> View. It's not purely functional because of the limitations of JavaScript and I/O being inheritently impure. Instead of deep cloning objects and arrays for immutability, Immutable JS - a persistent data structures library, is used.
 
-## Instructions
+## Installation
 
 ### Dependencies
 
@@ -42,7 +38,7 @@ To run tests
 
 `yarn run test` or `npm run test`
 
-## Contributors
+## Contributing
 
 Ralph Barton
 
@@ -55,6 +51,10 @@ Play on https://khaleed.github.io/bubble-trouble/
 Add units tests
 
 Add lives, levels, sprites, and sound
+
+## License
+
+Bubble Trouble is released under the <a href="https://opensource.org/licenses/MIT">The MIT License<a/>
 
 <a href='http://www.recurse.com' title='Made with love at the Recurse Center'><img src='https://cloud.githubusercontent.com/assets/2883345/11322975/9e575dce-910b-11e5-9f47-1fb1b530a4bd.png' height='75px'/></a>
 
