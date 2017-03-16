@@ -21,7 +21,7 @@ This is an implementation of the retro game Bubble Trouble.
 
 ### Dependencies
 
-First you need to intall `yarn` by following instructions on the Yarn [documentation](https://yarnpkg.com/en/docs/install)
+First you need to install `yarn` by following instructions on the Yarn [documentation](https://yarnpkg.com/en/docs/install) or just use npm ![Yarn vs npm](/public/yarnvsnmp.png)
 
 To get dependencies
 
