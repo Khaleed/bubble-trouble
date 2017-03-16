@@ -42,9 +42,6 @@ To run tests
 
 Ralph Barton
 
-## Prototype Game
-
-
 ## Future Plans
 
 Add units tests
