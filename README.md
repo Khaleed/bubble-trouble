@@ -8,12 +8,12 @@ This is an implementation of the retro game Bubble Trouble.
 - The bubbles randomly bounce around the screen in different velocities. 
 - All bubbles split-up into two smaller bubbles when shot except the smallest one in the list of standard bubbles. 
 - Each level comes with it's own scene and degree of difficulty. 
-- You can the playe the game [here](https://khaleed.github.io/bubble-trouble) :video_game:
+- You'll be able to play the game [here](https://khaleed.github.io/bubble-trouble) :video_game:
 
 ## Approach
 
 - Drawing on the [HTML5 Canvas](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API), the game loop, and collision detection are all done without any libraries or frameworks. 
-- This project is written in a functional style using the Elm Architecture: Model -> Update -> View. 
+- This project is written in a functional style using the [Elm Architecture](https://guide.elm-lang.org/architecture/). 
 - It's not purely functional because of the limitations of JavaScript and [I/O](https://en.wikipedia.org/wiki/Input/output) being inheritently impure. 
 - Instead of deep cloning objects and arrays for immutability, [Immutable JS](http://facebook.github.io/immutable-js/docs/#/) - a persistent data structures library, is used.
 
@@ -27,7 +27,7 @@ To get dependencies
 
 `yarn install` or `npm install`
 
-Install Webpack globally 
+Install [Webpack](https://webpack.js.org/) globally 
 
 `yarn global add webpack-devserver webpack` or `npm install webpack-devserver webpack -g`
 
@@ -45,13 +45,13 @@ To build when NODE_ENV environmental variable is set to production
 
 ### Test
 
-To run tests
+To run tests using [Jest](https://facebook.github.io/jest/)
 
 `yarn run test` or `npm run test`
 
 ## Contributing
 
-@ralphbarton
+[Ralph Barton](https://github.com/ralphbarton)
 
 ## Tasks
 
