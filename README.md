@@ -1,6 +1,6 @@
 # Bubble Trouble
 
-This is an implementation of the retro game Bubble Trouble. The player must shoot the bubbles before they collide with the player to complete each level. The bubbles randomly bounce around the screen. They all split into smaller bubbles when shot except the smallest one in the list of standard bubbles. There is a different scene and degree of difficulty for each level.
+This is an implementation of the retro game Bubble Trouble. The player must shoot the bubbles before they collide with the player to complete each level. The bubbles randomly bounce around the screen. They all split into smaller bubbles when shot except the smallest one in the list of standard bubbles. There is a different scene and degree of difficulty for each level. You can play on https://khaleed.github.io/bubble-trouble.
 
 ## Approach
 
@@ -10,7 +10,7 @@ Drawing on the canvas, the game loop, and collision detection are all done witho
 
 ### Dependencies
 
-First you need to intall `yarn` by following instructions on https://yarnpkg.com/en/docs/install 
+First you need to intall `yarn` by following instructions on https://yarnpkg.com/en/docs/install
 
 To get dependencies
 
@@ -44,7 +44,6 @@ Ralph Barton
 
 ## Prototype Game
 
-Play on https://khaleed.github.io/bubble-trouble/
 
 ## Future Plans
 
@@ -54,7 +53,7 @@ Add lives, levels, sprites, and sound
 
 ## License
 
-Bubble Trouble is released under the <a href="https://opensource.org/licenses/MIT">The MIT License<a/>
+Bubble Trouble is released under the <a href="https://opensource.org/licenses/MIT">The MIT License<a/>.
 
 <a href='http://www.recurse.com' title='Made with love at the Recurse Center'><img src='https://cloud.githubusercontent.com/assets/2883345/11322975/9e575dce-910b-11e5-9f47-1fb1b530a4bd.png' height='75px'/></a>
 
