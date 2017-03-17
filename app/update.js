@@ -58,8 +58,7 @@ const updatePlayerMovement = (keys, player, canvasWidth) => {
     const playerX = player.get("x");
     const isMovingleft = keys.state.get("isLeftKeyPressed") && playerX > 0;
     const isMovingRight = keys.state.get("isRightKeyPressed") && playerX < (canvasWidth - player.get("w"));
-    const deltaInMovement = (isMovingleft ? -step: 0) + (isMovingRight ? step: 0);
-    return playerX + deltaInMovement;
+    return playerX + (isMovingleft ? -step: 0) + (isMovingRight ? step: 0);
 };
 
 // isPlayerShooting :: ({ String: (Map<Bool>) }, [Arrows]) -> Bool
@@ -69,14 +68,7 @@ const isPlayerShooting = (keys, xs) => keys.state.get("isSpaceKeyPressed") && xs
 const addArrow = (keys, xs, arrow) => isPlayerShooting(keys, xs) ? xs.push(arrow) : xs; // eslint-disable-line fp/no-mutating-methods
 
 // getNewArrows :: ({ String: (Map<Bool>) }, (Map<Player>), [], Number) -> [Arrows]
-const createArrows = (keys, player, xs, canvasHeight) => {
-    const newArrow = Map({
-        x: player.get("x") + (player.get("w") / 2) - 1,
-        y: canvasHeight,
-        w: 3
-    });
-    return addArrow(keys, xs, newArrow);
-};
+const createArrows = (keys, player, xs, canvasHeight) => addArrow(keys, xs, Map({ x: player.get("x") + (player.get("w") / 2) - 1, y: canvasHeight, w: 3 }));
 
 // cleanArrows :: [Arrows] -> [CleanArrows]
 const cleanArrows = xs => xs.filter(x => x !== null);
@@ -90,25 +82,15 @@ const getUpdatedArrows = compose(cleanArrows, updateArrows);
 // isPlayerHit :: ([Bubbles], (Map<Player>)) -> Bool
 const isPlayerHit = (xs, player) => xs.reduce((acc, x) => acc || isRectStrikingBubble(player, x) ? true: false, false);
 
-// makeSmallerBubble :: (Number, Number, Bool, String, Number, [StandardBubbles]) -> Map
+// makeSmallerBubble :: (Number, Number, Number, String, Number, [StandardBubbles]) -> Map
 const makeSmallerBubble = (x, y, dir_right, color, size, xs) => {
     const step = 100;
-    return createBubble(
-        x, // depends if a right or left-sided bubble
-        y,
-        dir_right ? step : -step,
-        xs.get(size).get("vy_init"),
-        color,
-        xs.get(size).get("radius"),
-        size
-    );
+    const deltaInMovement = dir_right ? step: - step;
+    return createBubble(x, y, deltaInMovement, xs.get(size).get("vy_init"), color, xs.get(size).get("radius"), size);
 };
 
 // createSmallerBubbles :: ((Map<Bubble>), [StandardBubbles]) -> [SmallerBubbles]
 const createSmallerBubbles = (bubble, xs) => {
-    if (bubble.get("size") === 0) {
-        return List.of();
-    }
     const x = bubble.get("x");
     const y = bubble.get("y");
     const color = bubble.get("color");
