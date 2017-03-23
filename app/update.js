@@ -67,7 +67,7 @@ const isPlayerShooting = (keys, xs) => keys.state.get("isSpaceKeyPressed") && xs
 // createArrow :: ({ String: (Map<Bool>) }, [Arrows], (Map<Arrow>)) -> [NewArrows]
 const addArrow = (keys, xs, arrow) => isPlayerShooting(keys, xs) ? xs.push(arrow) : xs; // eslint-disable-line fp/no-mutating-methods
 
-// getNewArrows :: ({ String: (Map<Bool>) }, (Map<Player>), [], Number) -> [Arrows]
+// getNewArrows :: ({ String: (Map<Bool>) }, (Map<Player>), [Arrows], Number) -> [Arrows]
 const createArrows = (keys, player, xs, canvasHeight) => addArrow(keys, xs, Map({ x: player.get("x") + (player.get("w") / 2) - 1, y: canvasHeight, w: 3 }));
 
 // cleanArrows :: [Arrows] -> [CleanArrows]
