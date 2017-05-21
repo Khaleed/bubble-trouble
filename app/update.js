@@ -148,8 +148,8 @@ const collisionBubblesAndArrows = (arrows, bubbles, standardBubbles, score, scor
             struckBubbles: Set()
         })
     ).update("arrows", set => set.toList())
-        .update("bubbles", set => set.toList())
-        .delete("struckBubbles");
+     .update("bubbles", set => set.toList())
+     .delete("struckBubbles");
 };
 
 // isGameOver :: ((Map<Model>, Map<NewModel>)) -> MayBe
