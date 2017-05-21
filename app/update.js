@@ -1,4 +1,4 @@
-import { List, Map, Set } from "immutable";
+import { List, Map, Set, OrderedSet } from "immutable";
 import { partial, curry, compose, flatten } from "./helpers";
 import { createBubble, isRectStrikingBubble, dist } from "./helpers";
 
