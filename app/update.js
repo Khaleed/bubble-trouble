@@ -127,7 +127,7 @@ const permutations = (xs, ys) => xs.reduce((acc, x) => acc.concat(ys.map(
 )), List());
 
 // collisionBubblesAndArrows :: ([Arrows], [Bubbles], [StandardBubbles], Int, [Scores]) -> Map(<Arrows, Bubbles, Score>)
-const collisionBubblesAndArrows1 = (arrows, bubbles, standardBubbles, score, scores) => {
+const collisionBubblesAndArrows = (arrows, bubbles, standardBubbles, score, scores) => {
     return permutations(arrows, bubbles).reduce(
         (acc, [arrow, bubble]) => {
             const struck = isRectStrikingBubble(arrow, bubble);
