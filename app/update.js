@@ -41,11 +41,11 @@ const updateBubble = (bubble, xs, canvasWidth, canvasHeight) => {
     );
 };
 
-// updateArrow :: (Map<Arrow>) -> MayBe
+// updateArrow :: (Map<Arrow>) -> Maybe
 const updateArrow = arrow => {
     const step = 10;
     if (arrow === null) {
-        return null; // use a mayBe
+        return null; // could use a Maybe
     }
     const newY = arrow.get("y") - step;
     const newArrow = arrow.merge({ y: newY});
@@ -118,56 +118,39 @@ const updateScores = (score, xs, bubble) => {
     return score;
 };
 
-// collisionBubblesAndArrows :: ([Arrows], [Bubbles], [StandardBubbles], Int, [Scores])
-const collisionBubblesAndArrows = (arrows, bubbles, standardBubbles, score, scores) => {
-    for (let i = 0; i < arrows.size; i += 1) {
-        for (let j = 0; j < bubbles.size; j += 1) {
-            if (isRectStrikingBubble(arrows.get(i), bubbles.get(j))) {
-                const newArrows = arrows.delete(i);
-                const newBubbles1 = bubbles.delete(j);
-                const bubble = bubbles.get(j);
-                const newScore = updateScores(score, scores, bubble);
-                const newBubbles2 = bubble.get("size") > 0  ? newBubbles1.concat(
-                    createSmallerBubbles(bubble, standardBubbles)
-                ) : newBubbles1;
-                return Map({ arrows: newArrows, bubbles: newBubbles2, score: newScore });
-            }
-        }
-    }
-    return Map({ arrows: arrows, bubbles: bubbles, score: score });
+// splitBubble :: (Map<Bubble>, [StandardBubbles]) -> [SmallerBubbles] || []
+const splitBubble = (bubble, standardBubbles) => bubble.get("size") > 0 ? createSmallerBubbles(bubble, standardBubbles) : List.of();
+
+// permutations :: (xs, ys) -> [x, y]
+const permutations = (xs, ys) => xs.reduce((acc, x) => acc.concat(ys.map(
+    y => [x, y]
+)), List());
+
+// collisionBubblesAndArrows :: ([Arrows], [Bubbles], [StandardBubbles], Int, [Scores]) -> Map(<Arrows, Bubbles, Score>)
+const collisionBubblesAndArrows1 = (arrows, bubbles, standardBubbles, score, scores) => {
+    return permutations(arrows, bubbles).reduce(
+        (acc, [arrow, bubble]) => {
+            const struck = isRectStrikingBubble(arrow, bubble);
+            return Map({
+                arrows: struck ? acc.get("arrows").delete(arrow) : acc.get("arrows"),
+                bubbles: struck ?
+                    acc.get("bubbles").delete(bubble).concat(splitBubble(bubble, standardBubbles)) :
+                    acc.get("struckBubbles").has(bubble) ?
+                    acc.get("bubbles") :
+                    acc.get("bubbles").add(bubble),
+                score: struck ? updateScores(acc.get("score"), scores, bubble) : acc.get("score"),
+                struckBubbles: struck ? acc.get("struckBubbles").add(bubble) : acc.get("struckBubbles")
+            });
+        } , Map({
+            arrows: arrows.toOrderedSet(),
+            bubbles: bubbles.toOrderedSet(),
+            score,
+            struckBubbles: Set()
+        })
+    ).update("arrows", set => set.toList())
+        .update("bubbles", set => set.toList())
+        .delete("struckBubbles");
 };
-
-// // makePair :: ([Arrows], [Bubbles]) -> [(Arrow, Bubble)]
-// const makePair = (xs, ys) => {
-//     return xs.map(x => flatten(ys.map(y => List(x, y))));
-// };
-
-// // noGood :: ([(Arrow, Bubble)]) -> [[NoGoodArrows], [NoGoodBubbles]]
-// const noGood = xs => {
-//     const ys = xs.filter(x => isRectStrikingBubble(x.get(0), x.get(1)));
-//     const zs = ys.reduce((acc, y) => {
-//         return acc.update("arrows", arrows => arrows.push(y.get(0))) // eslint-disable-line fp/no-mutating-methods
-//                   .update("bubbles", bubbles => bubbles.push(y.get(1))); // eslint-disable-line fp/no-mutating-methods
-//     }, Map({ arrows: List.of(), bubbles: List.of()}));
-//     return List.of(zs.get("arrows"), zs.get("bubbles"));
-// };
-
-// // goodArrows :: ([Arrows], [NoGoodArrows]) -> [GoodArrows]
-// const goodArrows = (xs, ys) => {
-//     return xs.filter(x => !ys.some(y => y === x));
-// };
-
-// // goodBubbles :: ([Bubbles], [NoGoodBubbles], [StandardBubbles])-> [GoodBubbles]
-// const goodBubbles = (xs, ys, zs) => {
-//     return xs.reduce((acc, x) => {
-//         // if x bubble it is in [NoGoodBubbles]
-//         if (ys.some(y => y === x)) {
-//             // create smaller GoodBubble
-//             return acc.concat(createSmallerBubbles(x, zs));
-//         }
-//         return acc;
-//     }, List());
-// };
 
 // isGameOver :: ((Map<Model>, Map<NewModel>)) -> MayBe
 const isGameOver = (state, newGameState) => {
@@ -177,7 +160,7 @@ const isGameOver = (state, newGameState) => {
     return state;
 };
 
-// updateGame :: ((Map<Model>), [StandardBubbles], [Scores], { String: (Map<Bool>) }, HTML, Number)) -> Map
+// updateGame :: ((Map<Model>), [StandardBubbles], [Scores], { String: (Map<Bool>) }, HTML, Number)) -> Map<Bubbles, Player, Arrows, IsGameOver, Score>
 const updateGame = (state, standardBubbles, scores, keys, Html, dt) => {
     const player = state.get("player");
     const bubbles = state.get("bubbles");
