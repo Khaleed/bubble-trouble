@@ -1,4 +1,4 @@
-/*eslint fp/no-unused-expression: 0, fp/no-nil: 0 */
+/* eslint fp/no-unused-expression: 0, fp/no-nil: 0 */
 import { isRectStrikingBubble } from "../app/helpers";
 import { List, Map } from "immutable";
 
@@ -23,7 +23,7 @@ const arrows = List.of(
 );
 
 const player = Map({
-    x: 400,
+    x: 200,
     y: 260,
     w: 20,
     h: 40,
