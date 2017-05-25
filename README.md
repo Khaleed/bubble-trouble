@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Khaleed/bubble-trouble.svg?branch=master)](https://travis-ci.org/Khaleed/bubble-trouble)
+
 # Bubble Trouble
 
 This is an implementation of the retro game Bubble Trouble. 
