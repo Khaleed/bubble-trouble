@@ -121,13 +121,8 @@ const updateScores = (score, xs, bubble) => {
 // splitBubble :: (Map<Bubble>, [StandardBubbles]) -> [SmallerBubbles] || []
 const splitBubble = (bubble, standardBubbles) => bubble.get("size") > 0 ? createSmallerBubbles(bubble, standardBubbles) : List.of();
 
-// permutations :: (xs, ys) -> [x, y]
-const permutations = (xs, ys) => xs.reduce((acc, x) => acc.concat(ys.map(
-    y => [x, y]
-)), List());
-
-// collisionBubblesAndArrows :: ([Arrows], [Bubbles], [StandardBubbles], Int, [Scores]) -> Map(<Arrows, Bubbles, Score>)
-const collisionBubblesAndArrows = (arrows, bubbles, standardBubbles, score, scores) => {
+// buildGameStateFromArrowsAndBubbles :: ([Arrows], [Bubbles], [StandardBubbles], Int, [Scores]) -> Map(<NewArrows, NewBubbles, NewScore>, StruckBubbles)
+const buildGameStateFromArrowsAndBubbles = (arrows, bubbles, standardBubbles, score, scores) => {
     return permutations(arrows, bubbles).reduce(
         (acc, [arrow, bubble]) => {
             const struck = isRectStrikingBubble(arrow, bubble);
@@ -136,8 +131,8 @@ const collisionBubblesAndArrows = (arrows, bubbles, standardBubbles, score, scor
                 bubbles: struck ?
                     acc.get("bubbles").delete(bubble).concat(splitBubble(bubble, standardBubbles)) :
                     acc.get("struckBubbles").has(bubble) ?
-                    acc.get("bubbles") :
-                    acc.get("bubbles").add(bubble),
+                       acc.get("bubbles") :
+                       acc.get("bubbles").add(bubble),
                 score: struck ? updateScores(acc.get("score"), scores, bubble) : acc.get("score"),
                 struckBubbles: struck ? acc.get("struckBubbles").add(bubble) : acc.get("struckBubbles")
             });
@@ -169,7 +164,7 @@ const updateGame = (state, standardBubbles, scores, keys, Html, dt) => {
     const playerNewXPos = updatePlayerMovement(keys, player, Html.canvas.width);
     const newArrows = getUpdatedArrows(createArrows(keys, player, arrows, Html.canvas.height));
     const newBubbles = bubbles.map(bubble => updateBubble(bubble, standardBubbles, Html.canvas.width, Html.canvas.height));
-    const tuple = collisionBubblesAndArrows(
+    const tuple = buildGameStateFromArrowsAndBubbles(
         newArrows, bubbles.map(bubble => updateBubble(bubble, standardBubbles, Html.canvas.width, Html.canvas.height)), standardBubbles, score, scores
     );
     const newPlayer = player.merge({ x: playerNewXPos });
