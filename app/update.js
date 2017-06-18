@@ -45,11 +45,11 @@ const updateBubble = (bubble, xs, canvasWidth, canvasHeight) => {
 const updateArrow = arrow => {
     const step = 10;
     if (arrow === null) {
-        return null; // could use a Maybe
+        return null; // eslint-disable-line fp/no-nil
     }
     const newY = arrow.get("y") - step;
     const newArrow = arrow.merge({ y: newY});
-    return newY > 0 ? newArrow : null;
+    return newY > 0 ? newArrow : null; // eslint-disable-line fp/no-nil
 };
 
 // updatePlayerMovement :: ({ String: (Map<Bool>) }, (Map<Player>), Number) -> Number
