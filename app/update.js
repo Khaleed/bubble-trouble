@@ -1,5 +1,5 @@
 import { List, Map, Set, OrderedSet } from "immutable";
-import { partial, curry, compose, flatten } from "./helpers";
+import { partial, compose, permutations } from "./helpers";
 import { createBubble, isRectStrikingBubble, dist } from "./helpers";
 
 // getNewVY :: (Number, Number, Number) -> Number

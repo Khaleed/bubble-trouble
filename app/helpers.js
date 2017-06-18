@@ -1,4 +1,4 @@
-import { Map } from "immutable";
+import { Map, List } from "immutable";
 
 // createBubble :: (Canvas, Number, Number, String, Number, Number) -> Map
 const createBubble = (x, y, vx, vy, color, radius=45, size=2) => {
@@ -58,4 +58,9 @@ const compose = (...fs) => fs.reduce((f, g) => (...args) => f(g(...args))); // e
 // flatten :: [[xs], [ys]] -> [x, y]
 const flatten = list => list.reduce((acc, x) => acc.concat(x), []);
 
-export { createBubble, isRectStrikingBubble, dist, partial, curry, compose, flatten };
+// permutations :: (xs, ys) -> [x, y]
+const permutations = (xs, ys) => xs.reduce((acc, x) => acc.concat(ys.map(
+    y => [x, y]
+)), List());
+
+export { createBubble, isRectStrikingBubble, dist, partial, curry, compose, flatten, permutations };
