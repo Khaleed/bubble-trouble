@@ -65,7 +65,7 @@ To run tests using [Jest](https://facebook.github.io/jest/)
 
 ## License
 
-Bubble Trouble is released under the <a href="https://opensource.org/licenses/MIT">The MIT License<a/>.
+Bubble Trouble is released under the <a href="https://opensource.org/licenses/lgpl-3.0.html">The GPL 3.0 License<a/>.
 
 <a href='http://www.recurse.com' title='Made with love at the Recurse Center'><img src='https://cloud.githubusercontent.com/assets/2883345/11322975/9e575dce-910b-11e5-9f47-1fb1b530a4bd.png' height='75px'/></a> 
 
