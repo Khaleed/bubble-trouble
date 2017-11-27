@@ -130,9 +130,7 @@ const buildGameStateFromArrowsAndBubbles = (arrows, bubbles, standardBubbles, sc
                 arrows: struck ? acc.get("arrows").delete(arrow) : acc.get("arrows"),
                 bubbles: struck ?
                     acc.get("bubbles").delete(bubble).concat(splitBubble(bubble, standardBubbles)) :
-                    acc.get("struckBubbles").has(bubble) ?
-                       acc.get("bubbles") :
-                       acc.get("bubbles").add(bubble),
+                    acc.get("struckBubbles").has(bubble) ? acc.get("bubbles") : acc.get("bubbles").add(bubble),
                 score: struck ? updateScores(acc.get("score"), scores, bubble) : acc.get("score"),
                 struckBubbles: struck ? acc.get("struckBubbles").add(bubble) : acc.get("struckBubbles")
             });
@@ -143,11 +141,11 @@ const buildGameStateFromArrowsAndBubbles = (arrows, bubbles, standardBubbles, sc
             struckBubbles: Set()
         })
     ).update("arrows", set => set.toList())
-     .update("bubbles", set => set.toList())
-     .delete("struckBubbles");
+        .update("bubbles", set => set.toList())
+        .delete("struckBubbles");
 };
 
-// isGameOver :: ((Map<Model>, Map<NewModel>)) -> MayBe
+// isGameOver :: ((Map<Model>, Map<NewModel>)) -> State
 const isGameOver = (state, newGameState) => {
     if (!state.get("isGameOver")) {
         return newGameState;
