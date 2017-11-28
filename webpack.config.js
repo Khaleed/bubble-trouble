@@ -17,7 +17,7 @@ module.exports = {
   // where to dump bundled file, the absolute path is required here
   output: {
     path: path.resolve(__dirname, "public"),
-    publicPath: "/public", // for the web-dev-server to find the assets
+    publicPath: "/", // for the web-dev-server to find the assets
     filename: "bundle.js"
   },
 
