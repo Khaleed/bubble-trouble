@@ -44,7 +44,7 @@
     "immutable": "^3.8.1",
     "jest": "^16.0.2",
     "json-loader": "^0.5.4",
-    "node-sass": "^3.10.1",
+    "node-sass": "^7.0.0",
     "sass-loader": "^3.2.0",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1"
